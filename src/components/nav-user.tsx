@@ -1,5 +1,4 @@
 "use client"
-
 import {
   IconCreditCard,
   IconDotsVertical,
@@ -28,7 +27,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-
+import Cookies from 'js-cookie';
+import { useRouter } from "next/navigation";
+import { Cookie } from "next/font/google"
+import { AuthService } from "@/actions/users/auth"
+import { toast } from "sonner"
 export function NavUser({
   user,
 }: {
@@ -39,6 +42,16 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const router = useRouter();
+  const handleLogout = async () => {
+    try {
+      await AuthService.logout();
+      router.push('/');
+      toast.success('Logged out successfully');
+    } catch (error) {
+      toast.error('Logout failed');
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -98,7 +111,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <IconLogout />
               Log out
             </DropdownMenuItem>

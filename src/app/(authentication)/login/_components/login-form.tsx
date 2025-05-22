@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useState } from "react"
-import { Login } from "@/actions/auth/login"
 import { toast } from "sonner"
-import { useRouter } from 'next/navigation';;
+import { useRouter } from 'next/navigation';import { AuthService } from "@/actions/users/auth"
+;
 
 export function LoginForm({
   className,
@@ -22,7 +22,7 @@ export function LoginForm({
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await Login({ email, password });
+      await AuthService.login({ email, password });
       toast.success('Logged in successfully');
 
       router.push('/dashboard')
@@ -31,7 +31,6 @@ export function LoginForm({
     };
   }
   
-
   return (
     <form onSubmit={handleLogin} className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">

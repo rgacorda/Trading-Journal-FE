@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
-import { Register } from "@/actions/auth/register"
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation';;
 import Cookies from "js-cookie";
 import Link from "next/link";
+import { AuthService } from "@/actions/users/auth"
 
 export function RegisterForm({
   className,
@@ -26,13 +26,14 @@ export function RegisterForm({
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await Register({ firstname, lastname, email, phone, password });
+      await AuthService.register({ firstname, lastname, email, phone, password });
       toast.success('Registered successfully');
 
-      router.push('/dashboard');
+      router.push('/login');
     } catch (err: any) {
       if (err.message === 'Email already exists.') {
         toast.error('Email already exists.');
+        console.log(err);
       } else {
         toast.error('Registration failed. Please try again.');
       }
