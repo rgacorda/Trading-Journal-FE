@@ -2,6 +2,8 @@
 
 import * as React from "react"
 import {
+  IconActivity,
+  IconBackpack,
   IconCamera,
   IconChartBar,
   IconDashboard,
@@ -32,6 +34,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { getUser } from "@/actions/users/user"
 
 const data = {
   user: {
@@ -42,23 +45,28 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard/main",
       icon: IconDashboard,
     },
-    // {
-    //   title: "Lifecycle",
-    //   url: "#",
-    //   icon: IconListDetails,
-    // },
     {
       title: "Analytics",
-      url: "#",
+      url: "/dashboard/analytics",
       icon: IconChartBar,
     },
     {
+      title: "Journals",
+      url: "/dashboard/journals",
+      icon: IconFileWord,
+    },
+    {
       title: "Trades",
-      url: "#",
+      url: "/dashboard/trades",
       icon: IconListDetails,
+    },
+    {
+      title: "Plans",
+      url: "/dashboard/plans",
+      icon: IconBackpack,
     },
     // {
     //   title: "Projects",
@@ -167,7 +175,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <a href="#">
                 <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <span className="text-base font-semibold">Trade2Learn</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -7,7 +7,8 @@ import Link from "next/link"
 import { useState } from "react"
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation';import { AuthService } from "@/actions/users/auth"
-;
+
+
 
 export function LoginForm({
   className,
@@ -25,7 +26,7 @@ export function LoginForm({
       await AuthService.login({ email, password });
       toast.success('Logged in successfully');
 
-      router.push('/dashboard')
+      router.push('/dashboard/main')
     } catch (err: any) {
       toast.error('Login Failed')
     };

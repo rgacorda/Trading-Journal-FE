@@ -13,6 +13,8 @@ import { Label } from "@/components/ui/label";
 import { PlatformInput } from "./platform_input";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ImportTradesService } from "@/actions/trades/import_trades";
+import { getUser } from "@/actions/users/user";
 
 interface DialogProps {
   open: boolean;
@@ -29,10 +31,10 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
       const isValidType =
         selectedFile.type === "text/csv" ||
         selectedFile.name.endsWith(".csv") ||
-        selectedFile.name.endsWith(".xlsx");
+        selectedFile.name.endsWith(".xls");
 
       if (!isValidType) {
-        toast.error("Only CSV or Excel (.xlsx) files are allowed.");
+        toast.error("Only CSV or Excel (.xls) files are allowed.");
         return;
       }
 
@@ -40,12 +42,15 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
+    const user = await getUser();
+
     if (!file) {
       toast.error("No file or platform selected.");
       return;
     }else{
-      console.log(file, platform)
+      // console.log(platform, file)
+      await ImportTradesService.importTrades({ platform, file, user: user?.id });
       toast.success("File uploaded successfully.");
     }
   };
@@ -75,7 +80,7 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
             <Input
               id="picture"
               type="file"
-              accept=".csv,.xlsx"
+              accept=".csv,.xls"
               onChange={handleFileChange}
               className="col-span-3"
             />
