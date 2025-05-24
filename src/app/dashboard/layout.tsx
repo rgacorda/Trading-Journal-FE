@@ -1,6 +1,9 @@
+"use client"
+import { getUser } from "@/actions/users/user";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { useEffect } from "react";
 
 
 export default function DashboardLayout({children}: {children: React.ReactNode}) {

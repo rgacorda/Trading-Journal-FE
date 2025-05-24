@@ -1,17 +1,21 @@
+import AccountDashboard from "../_components/accounts/accounts";
 import MainDashboard from "../_components/main/main";
 
-export default function SiteDashboardPage({
+export default async function SiteDashboardPage({
   params,
 }: {
-  params: { site: string };
+  params: Promise<{ site: string }>;
 }) {
-  switch (params.site) {
+  const { site } = await params;
+  switch (site) {
     case "main":
       return <MainDashboard />;
       break;
-
+    case "accounts":
+      return <AccountDashboard />;
+      break;
     default:
-      return <>{params.site}</>
+      return <>{site}</>;
       break;
   }
 }

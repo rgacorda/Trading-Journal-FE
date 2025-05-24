@@ -6,7 +6,8 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useState } from "react"
 import { toast } from "sonner"
-import { useRouter } from 'next/navigation';import { AuthService } from "@/actions/users/auth"
+import { useRouter } from 'next/navigation';
+import {  Login } from "@/actions/users/auth"
 
 
 
@@ -23,7 +24,7 @@ export function LoginForm({
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await AuthService.login({ email, password });
+      await Login({ email, password });
       toast.success('Logged in successfully');
 
       router.push('/dashboard/main')

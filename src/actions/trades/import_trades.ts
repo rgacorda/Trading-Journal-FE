@@ -1,4 +1,4 @@
-import { http } from "@/lib/http";
+import api from "@/lib/axios";
 
 type ImportTrades = {
   platform: string;
@@ -13,6 +13,10 @@ export const ImportTradesService = {
     formData.append("platform", data.platform);
     formData.append("user", data.user || "");
 
-    return http.post("/trade/upload", formData, true);
+    return api.post("/trade/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   },
 };

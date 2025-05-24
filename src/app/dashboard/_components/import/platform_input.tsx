@@ -10,6 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+import data from "@/data/platform.json";
+
 interface PlatformInputProps {
     value: string
     setValue: (value: string) => void
@@ -23,8 +25,11 @@ export function PlatformInput({value, setValue}: PlatformInputProps) {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Platforms</SelectLabel>
-          <SelectItem value="tz_main">TradeZero Main</SelectItem>
-          <SelectItem value="tz_pro">TradeZero Pro</SelectItem>
+          {data.map(({ label, value }) => (
+            <SelectItem key={value} value={value}>
+              {label}
+            </SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>

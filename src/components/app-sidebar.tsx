@@ -54,6 +54,11 @@ const data = {
       icon: IconChartBar,
     },
     {
+      title: "Accounts",
+      url: "/dashboard/accounts",
+      icon: IconUsers,
+    },
+    {
       title: "Journals",
       url: "/dashboard/journals",
       icon: IconFileWord,

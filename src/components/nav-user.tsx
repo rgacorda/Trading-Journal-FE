@@ -30,7 +30,7 @@ import {
 import Cookies from 'js-cookie';
 import { useRouter } from "next/navigation";
 import { Cookie } from "next/font/google"
-import { AuthService } from "@/actions/users/auth"
+import {  Logout } from "@/actions/users/auth"
 import { toast } from "sonner"
 export function NavUser({
   user,
@@ -45,7 +45,7 @@ export function NavUser({
   const router = useRouter();
   const handleLogout = async () => {
     try {
-      await AuthService.logout();
+      await Logout();
       router.push('/');
       toast.success('Logged out successfully');
     } catch (error) {

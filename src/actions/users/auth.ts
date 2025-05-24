@@ -1,17 +1,8 @@
-import { http } from '@/lib/http';
+import api from "@/lib/axios";
 
 type LoginCredentials = {
   email: string;
   password: string;
-};
-
-type AuthResponse = {
-  message: string;
-  user?: {
-    id: string;
-    email: string;
-    role: string;
-  };
 };
 
 type RegisterCredentials = {
@@ -22,20 +13,33 @@ type RegisterCredentials = {
   phone: string;
 };
 
-export const AuthService = {
-  login: (credentials: LoginCredentials) => {
-    return http.post<AuthResponse>('/auth/login', credentials);
-  },
+export async function Register(data: RegisterCredentials) {
+  try {
+    const res = await api.post("/auth/register", data);
+    return res.data;
+  } catch (error: any) {
+    console.error("Registration failed:", error?.response?.data || error.message);
+    throw new Error(error?.response?.data?.message || "Registration failed");
+  }
+}
 
-  logout: () => {
-    return http.post('/auth/logout');
-  },
+export async function Login(data: LoginCredentials) {
+  try {
+    const res = await api.post("/auth/login", data, { withCredentials: true });
+    return res.data;
+  } catch (error: any) {
+    console.error("Login failed:", error?.response?.data || error.message);
+    throw new Error(error?.response?.data?.message || "Login failed");
+  }
+}
 
-  register: (credentials: RegisterCredentials) => {
-    return http.post<AuthResponse>('/auth/register', credentials);
-  },
+export async function Logout() {
+  try {
+    const res = await api.post("/auth/logout", {}, { withCredentials: true });
+    return res.data;
+  } catch (error: any) {
+    console.error("Logout failed:", error?.response?.data || error.message);
+    throw new Error(error?.response?.data?.message || "Logout failed");
+  }
+}
 
-//   getCurrentUser: () => {
-//     return http.get<AuthResponse['user']>('/auth/me');
-//   },
-};

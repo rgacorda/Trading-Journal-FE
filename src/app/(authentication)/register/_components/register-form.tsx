@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import { useRouter } from 'next/navigation';;
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { AuthService } from "@/actions/users/auth"
+import { Register } from "@/actions/users/auth"
 
 export function RegisterForm({
   className,
@@ -26,7 +26,7 @@ export function RegisterForm({
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await AuthService.register({ firstname, lastname, email, phone, password });
+      await Register({ firstname, lastname, email, phone, password });
       toast.success('Registered successfully');
 
       router.push('/login');
