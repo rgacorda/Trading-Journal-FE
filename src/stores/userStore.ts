@@ -4,8 +4,10 @@ type User = {
   firstname: string;
   middlename: string|null;
   lastname: string;
-  role: string;
+//   role: string;
   email: string;
+  phone: string;
+  avatar: string;
 };
 
 type UserState = {

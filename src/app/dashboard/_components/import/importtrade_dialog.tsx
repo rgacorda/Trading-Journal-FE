@@ -14,7 +14,7 @@ import { PlatformInput } from "./platform_input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ImportTradesService } from "@/actions/trades/import_trades";
-import { getUser } from "@/actions/users/user";
+import { getToken } from "@/actions/users/user";
 
 interface DialogProps {
   open: boolean;
@@ -43,7 +43,7 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
   };
 
   const handleUpload = async () => {
-    const user = await getUser();
+    const user = await getToken();
 
     if (!file) {
       toast.error("No file or platform selected.");

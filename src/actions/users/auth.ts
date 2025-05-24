@@ -26,6 +26,7 @@ export async function Register(data: RegisterCredentials) {
 export async function Login(data: LoginCredentials) {
   try {
     const res = await api.post("/auth/login", data, { withCredentials: true });
+    console.log(res.data)
     return res.data;
   } catch (error: any) {
     console.error("Login failed:", error?.response?.data || error.message);

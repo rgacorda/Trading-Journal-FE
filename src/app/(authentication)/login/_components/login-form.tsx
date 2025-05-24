@@ -8,6 +8,8 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation';
 import {  Login } from "@/actions/users/auth"
+import { getUser } from "@/actions/users/user"
+import { useUserStore } from "@/stores/userStore"
 
 
 
@@ -26,6 +28,8 @@ export function LoginForm({
     try {
       await Login({ email, password });
       toast.success('Logged in successfully');
+
+      
 
       router.push('/dashboard/main')
     } catch (err: any) {
