@@ -2,11 +2,9 @@
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { toast } from "sonner"
-import { useRouter } from 'next/navigation';;
-import Cookies from "js-cookie";
+import { useRouter } from 'next/navigation';
 import Link from "next/link";
 import { Register } from "@/actions/users/auth"
 

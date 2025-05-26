@@ -1,17 +1,13 @@
-"use client"
+"use client";
 import {
   IconCreditCard,
   IconDotsVertical,
   IconLogout,
   IconNotification,
   IconUserCircle,
-} from "@tabler/icons-react"
+} from "@tabler/icons-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,21 +16,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
-import Cookies from 'js-cookie';
+} from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
-import { Cookie } from "next/font/google"
-import {  Logout } from "@/actions/users/auth"
-import { toast } from "sonner"
-import { useUserStore } from "@/stores/userStore"
+import { Logout } from "@/actions/users/auth";
+import { toast } from "sonner";
+import { useUserStore } from "@/stores/user-store";
 export function NavUser() {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
   const router = useRouter();
   const user = useUserStore((state) => state.user);
   const clearUser = useUserStore((state) => state.clearUser);
@@ -43,12 +37,12 @@ export function NavUser() {
     try {
       await Logout();
       clearUser();
-      router.push('/');
-      toast.success('Logged out successfully');
+      router.push("/");
+      toast.success("Logged out successfully");
     } catch (error) {
-      toast.error('Logout failed');
+      toast.error("Logout failed");
     }
-  }
+  };
 
   return (
     <SidebarMenu>
@@ -64,7 +58,9 @@ export function NavUser() {
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user?.firstname} {user?.middlename} {user?.lastname}</span>
+                <span className="truncate font-medium">
+                  {user?.firstname} {user?.middlename} {user?.lastname}
+                </span>
                 <span className="text-muted-foreground truncate text-xs">
                   {user?.email}
                 </span>
@@ -85,7 +81,9 @@ export function NavUser() {
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user?.firstname} {user?.middlename} {user?.lastname}</span>
+                  <span className="truncate font-medium">
+                    {user?.firstname} {user?.middlename} {user?.lastname}
+                  </span>
                   <span className="text-muted-foreground truncate text-xs">
                     {user?.email}
                   </span>
@@ -116,5 +114,5 @@ export function NavUser() {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

@@ -1,25 +1,23 @@
-"use client"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import Link from "next/link"
-import { useState } from "react"
-import { toast } from "sonner"
-import { useRouter } from 'next/navigation';
-import {  Login } from "@/actions/users/auth"
-import { getUser } from "@/actions/users/user"
-import { useUserStore } from "@/stores/userStore"
-
-
+"use client";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Login } from "@/actions/users/auth";
+import { useUserStore } from "@/stores/user-store";
+import { getUser } from "@/actions/users/user";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
-
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const setUser = useUserStore((state) => state.setUser);
 
   const router = useRouter();
 
@@ -27,18 +25,23 @@ export function LoginForm({
     e.preventDefault();
     try {
       await Login({ email, password });
-      toast.success('Logged in successfully');
 
-      
+      const userDetails = await getUser();
+      setUser(userDetails);
 
-      router.push('/dashboard/main')
+      toast.success("Logged in successfully");
+      router.push("/dashboard/main");
     } catch (err: any) {
-      toast.error('Login Failed')
-    };
-  }
-  
+      toast.error("Login Failed");
+    }
+  };
+
   return (
-    <form onSubmit={handleLogin} className={cn("flex flex-col gap-6", className)} {...props}>
+    <form
+      onSubmit={handleLogin}
+      className={cn("flex flex-col gap-6", className)}
+      {...props}
+    >
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Login to your account</h1>
         <p className="text-balance text-sm text-muted-foreground">
@@ -48,7 +51,14 @@ export function LoginForm({
       <div className="grid gap-6">
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Input
+            id="email"
+            type="email"
+            placeholder="m@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
@@ -60,7 +70,13 @@ export function LoginForm({
               Forgot your password?
             </a>
           </div>
-          <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
         <Button type="submit" className="w-full">
           Login
@@ -87,5 +103,5 @@ export function LoginForm({
         </Link>
       </div>
     </form>
-  )
+  );
 }

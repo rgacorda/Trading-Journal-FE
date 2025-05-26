@@ -1,8 +1,7 @@
 "use client";
 
-import { IconCirclePlusFilled, IconMail, type Icon } from "@tabler/icons-react";
+import { IconCirclePlusFilled, type Icon } from "@tabler/icons-react";
 
-import { Button } from "@/components/ui/button";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -11,7 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useState } from "react";
-import { ImportTrade } from "@/app/dashboard/_components/import/importtrade_dialog";
+import { ImportTrade } from "@/app/dashboard/_features/import/importtrade_dialog";
 import Link from "next/link";
 
 export function NavMain({

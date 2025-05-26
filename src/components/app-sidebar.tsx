@@ -2,26 +2,19 @@
 
 import * as React from "react";
 import {
-  IconActivity,
   IconBackpack,
   IconCamera,
   IconChartBar,
   IconDashboard,
-  IconDatabase,
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  IconFolder,
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
   IconUsers,
 } from "@tabler/icons-react";
 
-import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -34,7 +27,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useUserStore } from "@/stores/userStore";
+import { useUserStore } from "@/stores/user-store";
 import { getUser } from "@/actions/users/user";
 
 const data = {
@@ -170,15 +163,15 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const setUser = useUserStore((state) => state.setUser);
+  // const setUser = useUserStore((state) => state.setUser);
 
-  React.useEffect(() => {
-    const fetchUser = async () => {
-      const userDetails = await getUser();
-      setUser(userDetails);
-    };
-    fetchUser();
-  });
+  // React.useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const userDetails = await getUser();
+  //     setUser(userDetails);
+  //   };
+  //   fetchUser();
+  // });
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>

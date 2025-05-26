@@ -1,5 +1,5 @@
-import AccountDashboard from "../_components/accounts/accounts";
-import MainDashboard from "../_components/main/main";
+import AccountDashboard from "../_features/accounts/accounts";
+import MainDashboard from "../_features/main/main";
 
 export default async function SiteDashboardPage({
   params,
