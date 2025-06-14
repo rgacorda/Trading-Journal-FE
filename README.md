@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📊 Trading Journal Frontend
 
-## Getting Started
+A modern, responsive frontend application built with **Next.js**, **TypeScript**, **Tailwind CSS**, and **shadcn/ui**. This project interfaces with the [Trading Journal API](https://github.com/your-username/trading-journal-api) to help traders upload, visualize, and manage their trading performance.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- 🔐 **JWT-based Authentication**
+  - Secure login & registration flows using HTTP-only cookies
+- 📁 **Trade Upload**
+  - Upload and parse CSV/XLSX files from supported brokers
+- 📊 **Analytics Dashboard**
+  - Interactive charts and metrics (P/L, win rate, drawdown, etc.)
+- 🗃 **Trade Journal**
+  - View, edit, delete, and filter trade entries
+- 💼 **Account Management**
+  - Manage broker/platform accounts and balance updates
+- 🎨 **UI/UX**
+  - Clean, accessible UI using Tailwind CSS + [shadcn/ui](https://ui.shadcn.com/)
+
+---
+
+## 🛠 Tech Stack
+
+- **Next.js** (App Router)
+- **TypeScript**
+- **Axios** (API communication)
+- **Tailwind CSS** (utility-first styling)
+- **shadcn/ui** (UI component library)
+- **Zustand** (lightweight state management)
+
+---
+
+## 📦 Getting Started
+
+### Prerequisites
+
+- Node.js (v18+ recommended)
+- Access to the backend API (Express + MySQL)
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-username/trading-journal-frontend.git
+cd trading-journal-frontend
+npm install
 ```
+Environment Setup
+Create a .env.local file in the root:
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
+🧪 Run Locally
+```bash
+npm run dev
+```
+The app should now be running at:
+🔗 http://localhost:3000
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+All requests use Axios and are configured to include credentials:
+```bash
+// lib/axios.ts
+import axios from "axios";
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  withCredentials: true,
+});
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+export default api;
+npm run dev
+```
+🔐 Authentication
 
-## Learn More
+Uses JWT with HTTP-only cookies. The login flow:
 
-To learn more about Next.js, take a look at the following resources:
+POST /auth/login sends credentials
+Backend sets token cookie
+Frontend validates session on load
+State is managed via a lightweight Zustand store.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+💅 UI/UX Tools
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+shadcn/ui: accessible and customizable components
+Tailwind CSS: atomic styling
+Lucide Icons: clean icon set
+📊 Pages
+```bash
+/dashboard: Main journal dashboard
+/upload: Upload trade data
+/auth/login: User login
+/auth/register: User registration
+/account: Manage platforms/balances
+🧱 Example API Call
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+// lib/trade.ts
+export const getTrades = async () => {
+  const res = await api.get("/trades");
+  return res.data;
+};
+```
+🧪 TODO / Improvements
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+ Role-based UI restrictions (free/silver/gold)
+ Add pagination and filters to journal
+ Display broker/platform logos dynamically
+ Add user preferences (dark mode, timezone, etc.)
+ Improved error boundaries and loading states
+
+🤝 Contributing
+
+PRs and discussions are welcome! If you'd like to propose changes or improvements, feel free to open an issue first.
+
+📬 Contact
+
+📧 rgacorda.the2nd@gmail.com
+🔗 Backend API: trading-journal-api
