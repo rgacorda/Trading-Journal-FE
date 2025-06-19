@@ -33,6 +33,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { toast } from "sonner";
 import { createAccount } from "@/actions/accounts/account";
 import { mutate } from "swr";
+import { on } from "events";
 
 const formSchema = z.object({
   // platform: z.string().nonempty("Platform is required"),
@@ -73,7 +74,7 @@ export default function AddAccountForm({
               Add your new trading account here. Click add when you're done.
             </DialogDescription>
           </DialogHeader>
-          <ProfileForm />
+          <ProfileForm onOpenChange={onOpenChange} />
         </DialogContent>
       </Dialog>
     );
@@ -94,7 +95,7 @@ export default function AddAccountForm({
               Add your new trading account here. Click add when you're done.
             </DrawerDescription>
           </DrawerHeader>
-          <ProfileForm className="px-4" />
+          <ProfileForm className="px-4" onOpenChange={onOpenChange}/>
           <DrawerFooter className="pt-2">
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
@@ -106,7 +107,13 @@ export default function AddAccountForm({
   );
 }
 
-function ProfileForm({ className }: React.ComponentProps<"form">) {
+function ProfileForm({
+  onOpenChange,
+  className,  
+}: {
+  onOpenChange: (open: boolean) => void;
+  className?: string
+}) {
   const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -116,23 +123,24 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
     },
   });
 
-  const [platformValue, setPlatformValue] = React.useState("");
+  // const [platformValue, setPlatformValue] = React.useState("");
 
-  const { setValue } = methods;
+  // const { setValue } = methods;
 
   // React.useEffect(() => {
   //   setValue("platform", platformValue);
   // }, [platformValue, setValue]);
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = async (values: FormValues) => {
     try {
-      createAccount({
+      await createAccount({
         // platform: values.platform,
         name: values.account_name,
         balance: values.account_value
       });
       mutate("/account/");
       toast.success("Account created successfully.");
+      onOpenChange(false);
     } catch (err : any) {
       toast.error(err.message)
     };

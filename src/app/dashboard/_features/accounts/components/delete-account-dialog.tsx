@@ -1,3 +1,4 @@
+import { deleteAccount, getAccountById } from "@/actions/accounts/account";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,20 +8,48 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAccountUIStore } from "@/stores/account-ui-store";
+import React from "react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { mutate } from "swr";
 
 // interface DialogProps {
 //   open: boolean;
 //   onOpenChange: (open: boolean) => void;
 // }
+
+
 export default function DeleteAccountDialog() {
   const open = useAccountUIStore((s) => s.deleteOpen);
   const onOpenChange = useAccountUIStore((s) => s.setDeleteOpen);
   const selectedId = useAccountUIStore((s) => s.selectedAccountId);
+  const [accountName, setAccountName] = useState<string>("");
+  const [accountNameInput, setAccountNameInput] = useState<string>("");
+
+  const handleDelete = async () => {
+    if (accountName === accountNameInput) {
+      await deleteAccount(selectedId);
+      onOpenChange(false);
+      mutate("/account/");
+      toast.success("Account deleted successfully.");
+    } else {
+      toast.error("Account name does not match.");
+    }
+  }
+
+  React.useEffect(() => {
+    if (!selectedId) return;
+    (async () => {
+      const account = await getAccountById(selectedId);
+      setAccountName(account.name);
+    })();
+  }, [selectedId]);
+
+  
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -38,13 +67,14 @@ export default function DeleteAccountDialog() {
             </Label>
             <Input
               id="name"
-              placeholder="Type Account Name"
+              placeholder={accountName}
               className="col-span-3"
+              onChange={(e) => setAccountNameInput(e.target.value)}
             />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Delete</Button>
+          <Button onClick={handleDelete}>Delete</Button>
           <DialogClose asChild>
             <Button type="button" variant="outline">
               Cancel
