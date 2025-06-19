@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { Logout } from "@/actions/users/auth";
 import { toast } from "sonner";
 import { useUserStore } from "@/stores/user-store";
+import { Skeleton } from "@/components/ui/skeleton"
 export function NavUser() {
   const { isMobile } = useSidebar();
   const router = useRouter();
@@ -44,6 +45,8 @@ export function NavUser() {
     }
   };
 
+
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -59,10 +62,14 @@ export function NavUser() {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  {user?.firstname} {user?.middlename} {user?.lastname}
+                  {user?.firstname || user?.middlename || user?.lastname ? (
+                    `${user?.firstname || ''} ${user?.middlename || ''} ${user?.lastname || ''}`.trim()
+                  ) : (
+                    <Skeleton className="h-4 w-[170px]" />
+                  )}
                 </span>
                 <span className="text-muted-foreground truncate text-xs">
-                  {user?.email}
+                  {user?.email || <Skeleton className="h-4 w-[150px]" />}
                 </span>
               </div>
               <IconDotsVertical className="ml-auto size-4" />

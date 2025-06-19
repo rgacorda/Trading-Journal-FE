@@ -17,28 +17,28 @@ import React from "react";
 
 export type Account = {
   id: string;
-  account_name: string;
-  account_value: number;
+  name: string;
+  balane: number;
   platform: string;
 };
 
 export const columns: ColumnDef<Account>[] = [
+  // {
+  //   accessorKey: "platform",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Platform
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       </Button>
+  //     );
+  //   },
+  // },
   {
-    accessorKey: "platform",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Platform
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "account_name",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
@@ -52,7 +52,7 @@ export const columns: ColumnDef<Account>[] = [
     },
   },
   {
-    accessorKey: "account_value",
+    accessorKey: "balance",
     header: ({ column }) => {
       return (
         <Button
@@ -65,7 +65,7 @@ export const columns: ColumnDef<Account>[] = [
       );
     },
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("account_value"));
+      const amount = parseFloat(row.getValue("balance"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",

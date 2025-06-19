@@ -49,8 +49,6 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [openAddForm, setOpenAddForm] = React.useState<boolean>(false);
-  const [openEditForm, setOpenEditForm] = React.useState(false);
-  const [openDeleteForm, setOpenDeleteForm] = React.useState(false);
 
   const table = useReactTable({
     data,
@@ -75,10 +73,10 @@ export function DataTable<TData, TValue>({
         <Input
           placeholder="Filter emails..."
           value={
-            (table.getColumn("account_name")?.getFilterValue() as string) ?? ""
+            (table.getColumn("name")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("account_name")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

@@ -13,7 +13,6 @@ import { PlatformInput } from "./platform_input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ImportTradesService } from "@/actions/trades/import_trades";
-import { getToken } from "@/actions/users/user";
 
 interface DialogProps {
   open: boolean;
@@ -42,14 +41,13 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
   };
 
   const handleUpload = async () => {
-    const user = await getToken();
 
     if (!file) {
       toast.error("No file or platform selected.");
       return;
     }else{
       // console.log(platform, file)
-      await ImportTradesService.importTrades({ platform, file, user: user?.id });
+      await ImportTradesService.importTrades({ platform, file });
       toast.success("File uploaded successfully.");
     }
   };

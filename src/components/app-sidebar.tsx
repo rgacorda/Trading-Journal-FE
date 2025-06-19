@@ -163,15 +163,16 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  // const setUser = useUserStore((state) => state.setUser);
+  const setUser = useUserStore((state) => state.setUser);
+
 
   // React.useEffect(() => {
-  //   const fetchUser = async () => {
-  //     const userDetails = await getUser();
-  //     setUser(userDetails);
+  //   const userFunc = async () => {
+  //     const user = await getUser();
+  //     setUser(user);
   //   };
-  //   fetchUser();
-  // });
+  //   userFunc();
+  // }, []);
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
