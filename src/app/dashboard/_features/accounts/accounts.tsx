@@ -4,6 +4,7 @@ import { Account, columns } from "./table/columns";
 import { DataTable } from "./table/data-table";
 import { fetcher } from "@/lib/fetcher";
 import { toast } from "sonner";
+import React from "react";
 
 export default function AccountDashboard() {
   const { data, error, isLoading, mutate } = useSWR<Account[]>(

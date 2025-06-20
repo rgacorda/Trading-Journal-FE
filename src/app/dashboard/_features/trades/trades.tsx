@@ -5,6 +5,7 @@ import { DataTable } from "./table/data-table";
 import { fetcher } from "@/lib/fetcher";
 import { toast } from "sonner";
 import { Trade } from "@/actions/trades/trades";
+import React from "react";
 
 
 export default function TradeDashboard() {

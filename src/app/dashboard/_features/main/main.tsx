@@ -1,7 +1,9 @@
+"use client"
 import { SectionCards } from "@/components/section-cards";
 import { ChartAreaInteractive } from "./chart-area";
 import { DataTable } from "@/components/data-table";
 import data from "./data.json";
+import React from "react";
 
 export default function MainDashboard() {
   return (
