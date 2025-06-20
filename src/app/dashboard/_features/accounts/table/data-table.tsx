@@ -29,9 +29,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import React from "react";
-import AddAccountForm from "./components/add-account-form";
-import EditAccountForm from "./components/edit-account-form";
-import DeleteAccountDialog from "./components/delete-account-dialog";
+import AddAccountForm from "../components/add-account-form";
+import EditAccountForm from "../components/edit-account-form";
+import DeleteAccountDialog from "../components/delete-account-dialog";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -71,10 +71,8 @@ export function DataTable<TData, TValue>({
     <>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={
-            (table.getColumn("name")?.getFilterValue() as string) ?? ""
-          }
+          placeholder="Filter accounts..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
@@ -177,8 +175,8 @@ export function DataTable<TData, TValue>({
           Next
         </Button>
       </div>
-      <EditAccountForm/>
-      <DeleteAccountDialog/>
+      <EditAccountForm />
+      <DeleteAccountDialog />
     </>
   );
 }

@@ -13,6 +13,7 @@ import { PlatformInput } from "./platform_input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ImportTradesService } from "@/actions/trades/import_trades";
+import { mutate } from "swr";
 
 interface DialogProps {
   open: boolean;
@@ -49,6 +50,7 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
       // console.log(platform, file)
       await ImportTradesService.importTrades({ platform, file });
       toast.success("File uploaded successfully.");
+      mutate('/trade/');
     }
   };
 

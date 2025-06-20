@@ -1,5 +1,6 @@
 import AccountDashboard from "../_features/accounts/accounts";
 import MainDashboard from "../_features/main/main";
+import TradeDashboard from "../_features/trades/trades";
 
 export default async function SiteDashboardPage({
   params,
@@ -10,6 +11,9 @@ export default async function SiteDashboardPage({
   switch (site) {
     case "main":
       return <MainDashboard />;
+      break;
+    case "trades":
+      return <TradeDashboard/>
       break;
     case "accounts":
       return <AccountDashboard />;
