@@ -27,6 +27,7 @@ export default function DeleteAccountDialog() {
   const open = useAccountUIStore((s) => s.deleteOpen);
   const onOpenChange = useAccountUIStore((s) => s.setDeleteOpen);
   const selectedId = useAccountUIStore((s) => s.selectedAccountId);
+  const setSelectedId = useAccountUIStore((s) => s.setSelectedAccountId);
   const [accountName, setAccountName] = useState<string>("");
   const [accountNameInput, setAccountNameInput] = useState<string>("");
 
@@ -34,6 +35,7 @@ export default function DeleteAccountDialog() {
     if (accountName === accountNameInput) {
       await deleteAccount(selectedId);
       onOpenChange(false);
+      setSelectedId(null);
       mutate("/account/");
       toast.success("Account deleted successfully.");
     } else {

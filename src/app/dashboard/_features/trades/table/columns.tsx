@@ -1,9 +1,8 @@
 import { Trade } from "@/actions/trades/trades";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-
+import { Checkbox } from "@/components/ui/checkbox";
 import { MoreHorizontal } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,8 +13,33 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
+import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 export const columns: ColumnDef<Trade>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "date",
     header: ({ column }) => {
@@ -31,8 +55,21 @@ export const columns: ColumnDef<Trade>[] = [
     },
     cell: ({ row }) => {
       const value = row.getValue("date") as string;
-      const formatted = format(new Date(value), "MMM dd, yyyy"); // e.g., "Jun 19, 2025"
+      const formatted = format(new Date(value), "MMM dd, yyyy");
       return <div>{formatted}</div>;
+    },
+    sortingFn: (rowA, rowB, columnId) => {
+      const dateA = new Date(rowA.getValue(columnId) as string).getTime();
+      const dateB = new Date(rowB.getValue(columnId) as string).getTime();
+      return dateA - dateB;
+    },
+  },
+  {
+    accessorKey: "time",
+    header: "Time",
+    cell: ({ row }) => {
+      const value = row.getValue("time") as string;
+      return <div>{value}</div>;
     },
   },
   {
@@ -42,6 +79,13 @@ export const columns: ColumnDef<Trade>[] = [
   {
     accessorKey: "side",
     header: "Side",
+    cell: ({ row }) => {
+      const side = row.getValue("side") as string;
+      const color =
+        side.toLowerCase() === "long" ? "text-green-500" : "text-red-500";
+      const capitalizedSide = side.charAt(0).toUpperCase() + side.slice(1);
+      return <div className={color}>{capitalizedSide}</div>;
+    },
   },
   {
     accessorKey: "quantity",
@@ -67,6 +111,27 @@ export const columns: ColumnDef<Trade>[] = [
   {
     accessorKey: "grade",
     header: "Grade",
+    cell: ({ row }) => (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
+            // loading: `Saving ${row.original.header}`,
+            success: "Done",
+            error: "Error",
+          });
+        }}
+      >
+        <Label htmlFor={`${row.original.id}-target`} className="sr-only">
+          Target
+        </Label>
+        <Input
+          className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
+          // defaultValue={row.original.target}
+          id={`${row.original.id}-target`}
+        />
+      </form>
+    ),
   },
   {
     accessorKey: "mistakes",
@@ -83,7 +148,11 @@ export const columns: ColumnDef<Trade>[] = [
         currency: "USD",
       }).format(amount);
 
-      return <div className="text-right font-medium">{formatted}</div>;
+      const color = amount >= 0 ? "text-green-500" : "text-red-500";
+
+      return (
+        <div className={`${color} text-right font-medium`}>{formatted}</div>
+      );
     },
   },
   {
