@@ -59,7 +59,7 @@ export default function AddAccountForm({
 }: ProfileFormProps) {
   const isDesktop = useIsMobile();
 
-  if (isDesktop) {
+  if (!isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogTrigger asChild>
