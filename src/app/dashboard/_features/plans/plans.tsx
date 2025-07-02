@@ -9,7 +9,7 @@ import TiptapEditor from "./components/tiptap";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
 
-type Plan = {
+export type Plan = {
   id: string;
   name: string;
 };

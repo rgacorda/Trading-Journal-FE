@@ -8,8 +8,8 @@ export type Trade = {
   entry: number;
   exit: number;
   fees: number;
-  setup: string;
-  plan: string;
+  // setup: string;
+  // plan: string;
   grade: string;
   mistakes: string[];
   notes: string;
@@ -18,7 +18,7 @@ export type Trade = {
   realized: number;
   security: string;
   broker: string;
-  plan_id: string;
+  planId: string;
   account_id: string;
 };
 export const getTrades = async () => {
@@ -55,7 +55,7 @@ export const getTradebyId = async (id: string | null) => {
   }
 };
 
-export const updateTrade = async (id: string | null, data: Trade) => {
+export const updateTrade = async (id: string | null, data: Partial<Trade>) => {
   if (!id) return;
   try {
     const res = await api.put(`/trade/${id}`, data);

@@ -11,8 +11,7 @@ import { SectionCards } from "./components/section-cards";
 
 export default function TradeDashboard() {
 
-  const { data, error, isLoading, mutate } = useSWR<Trade[]>("/trade/", fetcher);
-  console.log(data)
+  const { data: trades, error, isLoading, mutate } = useSWR<Trade[]>("/trade/", fetcher);
   
   // if (error) return <div>failed to load</div>;
   // if (isLoading) return <div>loading...</div>;
@@ -22,7 +21,7 @@ export default function TradeDashboard() {
     <>
        <SectionCards />
       <div className="container mx-auto px-4 lg:px-6">
-        <DataTable columns={columns} data={data || []} />
+        <DataTable columns={columns} data={trades || []} />
       </div>
     </>
   );

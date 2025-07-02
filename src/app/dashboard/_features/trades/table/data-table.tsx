@@ -31,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import MistakesUpdateCard from "../components/mistakes-Updatecard";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -162,6 +163,7 @@ export function DataTable<TData, TValue>({
           Next
         </Button>
       </div>
+      <MistakesUpdateCard />
     </>
   );
 }

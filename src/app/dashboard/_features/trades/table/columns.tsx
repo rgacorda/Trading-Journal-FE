@@ -1,4 +1,4 @@
-import { Trade } from "@/actions/trades/trades";
+import { Trade, updateTrade } from "@/actions/trades/trades";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,8 +14,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
 import { toast } from "sonner";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import useSWR, { mutate } from "swr";
+import { Plan } from "../../plans/plans";
+import { fetcher } from "@/lib/fetcher";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { useTradeUIStore } from "@/stores/trade-ui-store";
 
 export const columns: ColumnDef<Trade>[] = [
   {
@@ -100,44 +113,147 @@ export const columns: ColumnDef<Trade>[] = [
     header: "Exit",
   },
   {
-    accessorKey: "setup",
+    accessorKey: "planId",
     header: "Setup",
-  },
-  {
-    accessorKey: "plan",
-    header: "Plan",
-  },
+    cell: ({ row }) => {
+      const setup = row.getValue("planId") as string;
 
+      const { data: plans } = useSWR<Plan[]>("/plan/", fetcher);
+      return (
+        <div>
+          <Select
+            value={row.original?.planId}
+            onValueChange={async (value) => {
+              try {
+                await updateTrade(row.original.id, {
+                  ...row.original,
+                  planId: value,
+                });
+                mutate("/trade/");
+                toast.success("Trade updated successfully.");
+              } catch (error: any) {
+                toast.error("Failed to update trade.");
+              }
+            }}
+          >
+            <SelectTrigger className="w-[180px] border-none">
+              <SelectValue placeholder="Select a plan" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Plans</SelectLabel>
+                {plans?.map((plan) => (
+                  <SelectItem key={plan.id} value={plan.id}>
+                    {plan.name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      );
+    },
+  },
+  // {
+  //   accessorKey: "plan",
+  //   header: "Plan",
+  //   // cell: ({ row }) => {
+
+  //   // }
+  // },
   {
     accessorKey: "grade",
     header: "Grade",
     cell: ({ row }) => (
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-            // loading: `Saving ${row.original.header}`,
-            success: "Done",
-            error: "Error",
-          });
-        }}
-      >
-        <Label htmlFor={`${row.original.id}-target`} className="sr-only">
-          Target
-        </Label>
+      <>
         <Input
           className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-          // defaultValue={row.original.target}
+          defaultValue={row.original?.grade}
           id={`${row.original.id}-target`}
+          onBlur={async (e) => {
+            const newValue = e.target.value;
+
+            if (newValue !== row.original?.grade) {
+              try {
+                await updateTrade(row.original.id, {
+                  ...row.original,
+                  grade: newValue,
+                });
+                toast.success("Grade updated successfully.");
+              } catch (err: any) {
+                toast.error(err.message);
+              }
+            }
+          }}
         />
-      </form>
+      </>
     ),
   },
   {
     accessorKey: "mistakes",
     header: "Mistakes",
-  },
+    cell: ({ row }) => {
+      const mistakes = row.original?.mistakes as string[];
+      const setEditOpen = useTradeUIStore((s) => s.setEditOpen);
+      const setSelectedTradeId = useTradeUIStore((s) => s.setSelectedTradeId);
 
+      return (
+        <>
+          {row.original?.mistakes?.length > 0 ? (
+            <>
+              <Badge
+                variant="outline"
+                className="text-xs mr-1"
+                onClick={() => {
+                  setSelectedTradeId(row.original.id);
+                  setEditOpen(true);
+                }}
+              >
+                {row.original.mistakes[0]}
+              </Badge>
+              {row.original.mistakes.length > 1 && (
+                <Badge
+                  variant="outline"
+                  className="text-xs mr-1"
+                  onClick={() => {
+                    setSelectedTradeId(row.original.id);
+                    setEditOpen(true);
+                  }}
+                >
+                  +{row.original.mistakes.length - 1}
+                </Badge>
+              )}
+            </>
+          ) : (
+            <Badge
+              variant="outline"
+              className="text-xs"
+              onClick={() => {
+                setSelectedTradeId(row.original.id);
+                setEditOpen(true);
+              }}
+            >
+              No mistakes
+            </Badge>
+          )}
+        </>
+      );
+    },
+  },
+  {
+    accessorKey: "fees",
+    header: "Fees",
+    cell: ({ row }) => {
+      const fees = row.getValue("fees") as number;
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(fees);
+      return (
+        <div className="text-right font-medium text-red-500">{formatted}</div>
+      );
+    },
+  },
   {
     accessorKey: "realized",
     header: () => <div className="text-right">Realized</div>,
