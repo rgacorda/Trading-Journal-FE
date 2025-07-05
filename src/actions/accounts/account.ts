@@ -13,6 +13,13 @@ export const getAccounts = async () => {
   }
 };
 
+export type Account = {
+  name: string;
+  balance: number;
+  userId: string;
+  id: string;
+};
+
 type createAccount = {
   name: string;
   balance: number;

@@ -14,6 +14,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { ImportTradesService } from "@/actions/trades/import_trades";
 import { mutate } from "swr";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {  ChevronDownIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { AccountInput } from "./account_input";
 
 interface DialogProps {
   open: boolean;
@@ -23,6 +27,9 @@ interface DialogProps {
 export function ImportTrade({ open, onOpenChange }: DialogProps) {
   const [file, setFile] = useState<File | null>(null);
   const [platform, setPlatform] = useState<string>("");
+  const [account, setAccount] = useState<string>("");
+   const [openCalendat, setOpenCalendar] = useState(false)
+  const [date, setDate] = useState<Date | undefined>(undefined)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -42,15 +49,15 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
   };
 
   const handleUpload = async () => {
-
-    if (!file) {
-      toast.error("No file or platform selected.");
+    if (!file || !platform || !account || !date) {
+      toast.error("Incomplete Upload Details.");
       return;
-    }else{
+    } else {
       // console.log(platform, file)
-      await ImportTradesService.importTrades({ platform, file });
+      await ImportTradesService.importTrades({ platform, file, account, date });
       toast.success("File uploaded successfully.");
-      mutate('/trade/');
+      mutate("/trade/");
+      setFile(null);
     }
   };
 
@@ -66,10 +73,51 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
+              Date
+            </Label>
+            <div className="col-span-3">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      id="date-picker"
+                      className="w-full justify-between font-normal"
+                    >
+                      {date ? date.toLocaleDateString() : "Select date"}
+                      <ChevronDownIcon />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="w-auto overflow-hidden p-0"
+                    align="start"
+                  >
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      captionLayout="dropdown"
+                      onSelect={(date) => {
+                        setDate(date);
+                        setOpenCalendar(false);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+            </div>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
               Platform
             </Label>
             <div className="col-span-3">
               <PlatformInput value={platform} setValue={setPlatform} />
+            </div>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Account
+            </Label>
+            <div className="col-span-3">
+              <AccountInput value={account} setValue={setAccount} />
             </div>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
@@ -86,7 +134,9 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={handleUpload}>Import</Button>
+          <Button type="submit" onClick={handleUpload}>
+            Import
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
