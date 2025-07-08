@@ -244,13 +244,31 @@ export const columns: ColumnDef<Trade>[] = [
     accessorKey: "fees",
     header: "Fees",
     cell: ({ row }) => {
-      const fees = row.getValue("fees") as number;
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(fees);
       return (
-        <div className="text-right font-medium text-red-500">{formatted}</div>
+        // <div className="text-right font-medium text-red-500">{formatted}</div>
+        <>
+          <Input
+            className="text-red-500 hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
+            defaultValue={row.original?.fees}
+            id={`${row.original.id}-target`}
+            onBlur={async (e) => {
+              const newValue = parseFloat(e.target.value);
+
+              if (!isNaN(newValue) && newValue !== row.original?.fees) {
+                try {
+                  await updateTrade(row.original.id, {
+                    ...row.original,
+                    fees: newValue,
+                  });
+                  mutate("/trade/");
+                  toast.success("Fees updated successfully.");
+                } catch (err: any) {
+                  toast.error(err.message);
+                }
+              }
+            }}
+          />
+        </>
       );
     },
   },

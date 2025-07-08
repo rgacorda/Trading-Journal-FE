@@ -5,10 +5,8 @@ import {
   IconBackpack,
   IconCamera,
   IconChartBar,
-  IconDashboard,
   IconFileAi,
   IconFileDescription,
-  IconFileWord,
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,
@@ -28,7 +26,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useUserStore } from "@/stores/user-store";
-import { getUser } from "@/actions/users/user";
 
 const data = {
   // user: {
@@ -47,16 +44,11 @@ const data = {
       url: "/dashboard/analytics",
       icon: IconChartBar,
     },
-    {
-      title: "Accounts",
-      url: "/dashboard/accounts",
-      icon: IconUsers,
-    },
-    {
-      title: "Journals",
-      url: "/dashboard/journals",
-      icon: IconFileWord,
-    },
+    // {
+    //   title: "Journals",
+    //   url: "/dashboard/journals",
+    //   icon: IconFileWord,
+    // },
     {
       title: "Trades",
       url: "/dashboard/trades",
@@ -66,6 +58,11 @@ const data = {
       title: "Plans",
       url: "/dashboard/plans",
       icon: IconBackpack,
+    },
+    {
+      title: "Accounts",
+      url: "/dashboard/accounts",
+      icon: IconUsers,
     },
     // {
     //   title: "Projects",

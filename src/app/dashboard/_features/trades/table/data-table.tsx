@@ -32,6 +32,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import MistakesUpdateCard from "../components/mistakes-Updatecard";
+import { deleteTrades } from "@/actions/trades/trades";
+import useSWR, { mutate } from "swr";
+import { toast } from "sonner";
+import { Account } from "@/actions/accounts/account";
+import { fetcher } from "@/lib/fetcher";
+import { useTradeUIStore } from "@/stores/trade-ui-store";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -55,42 +61,68 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const { data : accounts} = useSWR<Account[]>("/account/", fetcher);
+  const { data : plans} = useSWR<Account[]>("/plan/", fetcher);
+  const setFilter = useTradeUIStore((s) => s.setFilter);
+
+
+
   return (
     <>
       <div className="flex justify-between py-2 space-x-2">
-        <Select>
+        <Select
+          value={useTradeUIStore.getState().filter}
+          onValueChange={setFilter}
+        >
           <SelectTrigger className="w-[280px]">
             <SelectValue placeholder="Select a Filter" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Accounts</SelectLabel>
-              <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
-              <SelectItem value="cst">Central Standard Time (CST)</SelectItem>
-              <SelectItem value="mst">Mountain Standard Time (MST)</SelectItem>
-              <SelectItem value="pst">Pacific Standard Time (PST)</SelectItem>
-              <SelectItem value="akst">Alaska Standard Time (AKST)</SelectItem>
-              <SelectItem value="hst">Hawaii Standard Time (HST)</SelectItem>
+              {accounts?.map(({ name, id }) => (
+                <SelectItem key={id} value={id}>
+                  {name}
+                </SelectItem>
+              ))}
             </SelectGroup>
             <SelectGroup>
-              <SelectLabel>Strategies</SelectLabel>
-              <SelectItem value="gmt">Greenwich Mean Time (GMT)</SelectItem>
-              <SelectItem value="cet">Central European Time (CET)</SelectItem>
-              <SelectItem value="eet">Eastern European Time (EET)</SelectItem>
-              <SelectItem value="west">
-                Western European Summer Time (WEST)
-              </SelectItem>
-              <SelectItem value="cat">Central Africa Time (CAT)</SelectItem>
-              <SelectItem value="eat">East Africa Time (EAT)</SelectItem>
+              <SelectLabel>Plans</SelectLabel>
+              {plans?.map(({ name, id }) => (
+                <SelectItem key={id} value={id}>
+                  {name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>Side</SelectLabel>
+              <SelectItem value="long">Long</SelectItem>
+              <SelectItem value="short">Short</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm">
+          {/* <Button variant="outline" size="sm">
             <IconPlus />
             <span className="hidden lg:inline">Add Trade</span>
-          </Button>
-          <Button variant="outline" size="sm">
+          </Button> */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={async () => {
+              const selectedRows = table.getSelectedRowModel().rows;
+              const selectedIds = selectedRows.map((row) => (row.original as { id: string }).id);
+              try {
+                await deleteTrades(selectedIds);
+                table.resetRowSelection();
+                mutate("/trade/");
+                toast.success("Trades deleted successfully.");
+              } catch (error) {
+                toast.error("Failed to delete trades.");
+                // console.error("Error deleting trades:", error);
+              }
+            }}
+          >
             <Trash className="text-red-500" />
           </Button>
         </div>
@@ -146,6 +178,10 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="text-muted-foreground flex-1 text-sm ">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
         <Button
           variant="outline"
           size="sm"
