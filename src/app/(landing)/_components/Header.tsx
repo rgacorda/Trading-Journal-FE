@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Menu, X, TrendingUp } from 'lucide-react';
+import Link from 'next/link';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,7 +15,7 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2">
             <TrendingUp className="h-8 w-8 text-gray-900" />
-            <span className="text-xl font-bold text-gray-900">Trade2Learn</span>
+            <span className="text-xl font-medium text-gray-900">Trade2Learn</span>
           </div>
 
           {/* Desktop Navigation */}
@@ -34,9 +35,9 @@ const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            <button className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
+            <Link className="text-gray-600 hover:text-gray-900 transition-colors duration-200" href={"/login"}>
               Sign In
-            </button>
+            </Link>
             <button className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors duration-200">
               Start Free Trial
             </button>
