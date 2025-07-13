@@ -2,7 +2,6 @@
 import api from "@/lib/axios";
 
 
-
 export const getUser = async () => {
   try {
     const res = await api.get(`/user/`);
@@ -12,3 +11,4 @@ export const getUser = async () => {
     throw new Error(error?.response?.data?.message || "Get user failed");
   }
 };
+

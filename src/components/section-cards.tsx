@@ -15,6 +15,7 @@ interface MainSectionCardsProps {
     totalRevenue: number | undefined;
     totalWinRate: number;
     totalTrades: number;
+    expectancy: number;
   }
 }
 export function SectionCards(data: MainSectionCardsProps) {
@@ -24,7 +25,15 @@ export function SectionCards(data: MainSectionCardsProps) {
         <CardHeader>
           <CardDescription>Total Revenue</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {data.data.totalRevenue ?? 0}
+            <span
+              className={`${
+                data.data.totalRevenue === undefined || data.data.totalRevenue < 0
+                  ? "text-red-500"
+                  : "text-green-500"
+              }`}
+            >
+              {data.data.totalRevenue?.toFixed(2) ?? 0}
+            </span>
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -46,7 +55,15 @@ export function SectionCards(data: MainSectionCardsProps) {
         <CardHeader>
           <CardDescription>Win Rate</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {data.data.totalWinRate}%
+            <span
+              className={`${
+                data.data.totalWinRate === undefined || data.data.totalWinRate < 0
+                  ? "text-red-500"
+                  : "text-green-500"
+              }`}
+            >
+              {data.data.totalWinRate?.toFixed(2) ?? 0}
+            </span>
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -88,7 +105,15 @@ export function SectionCards(data: MainSectionCardsProps) {
         <CardHeader>
           <CardDescription>Expectancy</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
+            <span
+              className={`${
+                data.data.expectancy === undefined || data.data.expectancy < 0
+                  ? "text-red-500"
+                  : "text-green-500"
+              }`}
+            >
+              {data.data.expectancy?.toFixed(2) ?? 0}
+            </span>
           </CardTitle>
           <CardAction>
             <Badge variant="outline">

@@ -13,7 +13,7 @@ export function middleware(req: NextRequest) {
     // If logged in, prevent access to login/register pages
     if (pathname === '/login' || pathname === '/register') {
       // Redirect logged-in users to homepage or dashboard
-      return NextResponse.redirect(new URL('/dashboard/analytics', req.url))
+      return NextResponse.redirect(new URL('/dashboard/main', req.url))
     }
     // Allow access to all other routes when logged in
     return NextResponse.next()

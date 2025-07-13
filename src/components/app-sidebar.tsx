@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useUserStore } from "@/stores/user-store";
 import { TrendingUp } from "lucide-react";
+import { getUser } from "@/actions/users/user";
 
 const data = {
   // user: {
@@ -163,15 +164,6 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const setUser = useUserStore((state) => state.setUser);
-
-
-  // React.useEffect(() => {
-  //   const userFunc = async () => {
-  //     const user = await getUser();
-  //     setUser(user);
-  //   };
-  //   userFunc();
-  // }, []);
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
