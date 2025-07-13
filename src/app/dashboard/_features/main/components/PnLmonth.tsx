@@ -91,7 +91,7 @@ export const MonthCalendar: React.FC<Props> = ({ events }) => {
         <div className="flex items-center justify-between space-y-1.5">
           <div>
             <CardTitle>Month Calendar</CardTitle>
-            <CardDescription>Monthly Profit and Loss</CardDescription>
+            <CardDescription>Daily Trades and PnL View</CardDescription>
           </div>
           <div className="flex justify-between items-center mb-4 lg:w-1/3">
             <Button onClick={prevMonth} variant={"outline"}  className="px-2 py-1 text-sm mx-1">
