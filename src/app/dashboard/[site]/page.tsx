@@ -7,6 +7,7 @@ import TradeDashboard from "../_features/trades/trades";
 import AccountDashboard from "../_features/accounts/accounts";
 import { useDashboardStore } from "@/stores/dashboard-ui-store";
 import PlansDashboard from "../_features/plans/plans";
+import AnalyticsDashboard from "../_features/analytics/analytics";
 
 export default function SiteDashboardPage({
   params,
@@ -23,6 +24,8 @@ export default function SiteDashboardPage({
   switch (site) { 
     case "main":
       return <MainDashboard />;
+    case "analytics":
+      return <AnalyticsDashboard />;
     case "trades":
       return <TradeDashboard />;
     case "accounts":

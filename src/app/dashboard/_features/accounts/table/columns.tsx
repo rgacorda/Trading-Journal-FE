@@ -1,5 +1,6 @@
 "use client";
 
+import { Account } from "@/actions/accounts/account";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,12 +16,6 @@ import { MoreHorizontal } from "lucide-react";
 import { ArrowUpDown } from "lucide-react";
 import React from "react";
 
-export type Account = {
-  id: string;
-  name: string;
-  balane: number;
-  platform: string;
-};
 
 export const columns: ColumnDef<Account>[] = [
   // {

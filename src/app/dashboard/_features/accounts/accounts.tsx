@@ -1,10 +1,11 @@
 "use client";
 import useSWR from "swr";
-import { Account, columns } from "./table/columns";
+import { columns } from "./table/columns";
 import { DataTable } from "./table/data-table";
 import { fetcher } from "@/lib/fetcher";
 import { toast } from "sonner";
 import React from "react";
+import { Account } from "@/actions/accounts/account";
 
 export default function AccountDashboard() {
   const { data, error, isLoading, mutate } = useSWR<Account[]>(

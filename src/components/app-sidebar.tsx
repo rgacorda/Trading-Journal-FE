@@ -5,6 +5,7 @@ import {
   IconBackpack,
   IconCamera,
   IconChartBar,
+  IconDashboard,
   IconFileAi,
   IconFileDescription,
   IconHelp,
@@ -34,11 +35,11 @@ const data = {
   //   avatar: "/avatars/shadcn.jpg",
   // },
   navMain: [
-    // {
-    //   title: "Dashboard",
-    //   url: "/dashboard/main",
-    //   icon: IconDashboard,
-    // },
+    {
+      title: "Dashboard",
+      url: "/dashboard/main",
+      icon: IconDashboard,
+    },
     {
       title: "Analytics",
       url: "/dashboard/analytics",
@@ -129,11 +130,11 @@ const data = {
     //   url: "#",
     //   icon: IconSettings,
     // },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
+    // {
+    //   title: "Get Help",
+    //   url: "#",
+    //   icon: IconHelp,
+    // },
     // {
     //   title: "Search",
     //   url: "#",

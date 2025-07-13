@@ -30,7 +30,7 @@ export default function PlansDashboard() {
 
   return (
     <>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-6">
         <div className="flex gap-4">
           <Input
             className="flex-1 mb-4"
