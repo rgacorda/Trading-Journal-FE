@@ -17,7 +17,7 @@ export default function RegisterPage() {
             </div>
             <div className="flex flex-col gap-4 p-6 md:p-10">
                 <div className="flex justify-center gap-2 md:justify-start">
-                    <Link href="/" className="flex items-center gap-2 font-medium">
+                    <Link href="/" className="flex items-center gap-2 font-medium text-xl font-medium text-gray-900">
                         <TrendingUp className="h-8 w-8 text-gray-900" />
                         Trade2Learn
                     </Link>

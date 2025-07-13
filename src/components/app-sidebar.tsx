@@ -27,6 +27,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useUserStore } from "@/stores/user-store";
+import { TrendingUp } from "lucide-react";
 
 const data = {
   // user: {
@@ -181,9 +182,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Trade2Learn</span>
+              <a href="/dashboard/main">
+                <TrendingUp className="h-8 w-8 text-gray-900" />
+                <span className="text-xl font-medium text-gray-900">Trade2Learn</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

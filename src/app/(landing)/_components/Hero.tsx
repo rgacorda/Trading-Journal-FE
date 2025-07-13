@@ -15,12 +15,12 @@ const Hero = () => {
               The most comprehensive trading journal and analytics platform. Track, analyze, and improve your trading performance with advanced statistics and insights.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center lg:justify-start">
-              <button className="bg-gray-900 text-white px-8 py-4 rounded-lg hover:bg-gray-800 transition-all duration-200 flex items-center justify-center group">
-                Start 14-Day Free Trial
+              <button disabled className="bg-gray-900 text-white px-8 py-4 rounded-lg hover:bg-gray-800 transition-all duration-200 flex items-center justify-center group">
+                14-Day Free Trial Coming Soon
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
               </button>
-              <button className="border border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                Watch Demo
+              <button disabled className="border border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                Demo Coming Soon
               </button>
             </div>
             <div className="flex items-center justify-center lg:justify-start mt-8 space-x-6 text-sm text-gray-500">

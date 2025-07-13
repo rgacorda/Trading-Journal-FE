@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Menu, X, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,9 +39,9 @@ const Header = () => {
             <Link className="text-gray-600 hover:text-gray-900 transition-colors duration-200" href={"/login"}>
               Sign In
             </Link>
-            <button className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors duration-200">
-              Start Free Trial
-            </button>
+            <Button disabled className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors duration-200">
+              Coming Soon
+            </Button>
           </div>
 
           {/* Mobile menu button */}

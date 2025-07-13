@@ -102,8 +102,8 @@ const Pricing = () => {
                 ))}
               </ul>
 
-              <button className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors duration-200 ${plan.buttonStyle}`}>
-                {plan.buttonText}
+              <button disabled className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors duration-200 ${plan.buttonStyle}`}>
+                Coming Soon
               </button>
             </div>
           ))}
