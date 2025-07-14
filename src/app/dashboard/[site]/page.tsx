@@ -8,6 +8,7 @@ import AccountDashboard from "../_features/accounts/accounts";
 import { useDashboardStore } from "@/stores/dashboard-ui-store";
 import PlansDashboard from "../_features/plans/plans";
 import AnalyticsDashboard from "../_features/analytics/analytics";
+import UserProfile from "../_features/user/userProfile";
 
 export default function SiteDashboardPage({
   params,
@@ -32,6 +33,8 @@ export default function SiteDashboardPage({
       return <AccountDashboard />;
     case "plans":
       return <PlansDashboard />;
+    case "user":
+      return <UserProfile />;
     default:
       return <div>{site}</div>;
   }
