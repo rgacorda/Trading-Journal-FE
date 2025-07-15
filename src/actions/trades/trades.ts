@@ -10,7 +10,7 @@ export type Trade = {
   fees: number;
   // setup: string;
   // plan: string;
-  grade: string;
+  grade: number;
   mistakes: string[];
   notes: string;
   date: string;

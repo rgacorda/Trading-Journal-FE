@@ -167,11 +167,14 @@ export const columns: ColumnDef<Trade>[] = [
     cell: ({ row }) => (
       <>
         <Input
+          type="number"
           className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
           defaultValue={row.original?.grade}
           id={`${row.original.id}-target`}
+          min={0}
+          max={5}
           onBlur={async (e) => {
-            const newValue = e.target.value;
+            const newValue = Number(e.target.value);
 
             if (newValue !== row.original?.grade) {
               try {

@@ -50,7 +50,7 @@ export const columns: ColumnDef<Account>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Live Value
+          Initial Value
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -75,7 +75,7 @@ export const columns: ColumnDef<Account>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Initial Value
+          Live Value
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -99,9 +99,15 @@ export const columns: ColumnDef<Account>[] = [
 
       const isUp = combined > balance;
 
+      if (combined === balance) {
+        return <div className="font-medium">{formatted}</div>;
+      }
+
       return (
         <div className="flex items-center gap-2 font-medium">
-          <span className={isUp ? "text-green-600" : "text-red-600"}>
+          <span
+            className={isUp ? "text-green-600" : "text-red-600"}
+          >
             {formatted}
           </span>
           {isUp ? (

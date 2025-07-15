@@ -61,57 +61,63 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const { data : accounts} = useSWR<Account[]>("/account/", fetcher);
-  const { data : plans} = useSWR<Account[]>("/plan/", fetcher);
+  const { data: accounts } = useSWR<Account[]>("/account/", fetcher);
+  const { data: plans } = useSWR<Account[]>("/plan/", fetcher);
   const setFilter = useTradeUIStore((s) => s.setFilter);
-
-
 
   return (
     <>
-      <div className="flex justify-between py-2 space-x-2">
-        <Select
-          value={useTradeUIStore.getState().filter}
-          onValueChange={setFilter}
-        >
-          <SelectTrigger className="w-[280px]">
-            <SelectValue placeholder="Select a Filter" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Accounts</SelectLabel>
-              {accounts?.map(({ name, id }) => (
-                <SelectItem key={id} value={id}>
-                  {name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-            <SelectGroup>
-              <SelectLabel>Plans</SelectLabel>
-              {plans?.map(({ name, id }) => (
-                <SelectItem key={id} value={id}>
-                  {name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-            <SelectGroup>
-              <SelectLabel>Side</SelectLabel>
-              <SelectItem value="long">Long</SelectItem>
-              <SelectItem value="short">Short</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+      <div className="flex flex-wrap items-center justify-between py-2 gap-2">
+        <div className="flex items-center gap-2">
+          <Select
+            value={useTradeUIStore.getState().filter}
+            onValueChange={setFilter}
+          >
+            <SelectTrigger className="w-[280px]">
+              <SelectValue placeholder="Select a Filter" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Accounts</SelectLabel>
+                {accounts?.map(({ name, id }) => (
+                  <SelectItem key={id} value={id}>
+                    {name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+              <SelectGroup>
+                <SelectLabel>Plans</SelectLabel>
+                {plans?.map(({ name, id }) => (
+                  <SelectItem key={id} value={id}>
+                    {name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+              <SelectGroup>
+                <SelectLabel>Side</SelectLabel>
+                <SelectItem value="long">Long</SelectItem>
+                <SelectItem value="short">Short</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
+          <Button
+            variant="outline"
+            onClick={() => setFilter(undefined)}
+          >
+            Clear Filter
+          </Button>
+        </div>
+
         <div className="flex items-center space-x-2">
-          {/* <Button variant="outline" size="sm">
-            <IconPlus />
-            <span className="hidden lg:inline">Add Trade</span>
-          </Button> */}
           <Button
             variant="outline"
             size="sm"
             onClick={async () => {
               const selectedRows = table.getSelectedRowModel().rows;
-              const selectedIds = selectedRows.map((row) => (row.original as { id: string }).id);
+              const selectedIds = selectedRows.map(
+                (row) => (row.original as { id: string }).id
+              );
               try {
                 await deleteTrades(selectedIds);
                 table.resetRowSelection();
@@ -119,7 +125,6 @@ export function DataTable<TData, TValue>({
                 toast.success("Trades deleted successfully.");
               } catch (error) {
                 toast.error("Failed to delete trades.");
-                // console.error("Error deleting trades:", error);
               }
             }}
           >
@@ -127,6 +132,7 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>

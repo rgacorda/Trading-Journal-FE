@@ -35,7 +35,6 @@ function calculateStats(trades: Trade[] | undefined): {
   const perShare = trades.map((t) =>
     t.quantity ? Number(t.realized) / t.quantity : 0
   );
-
   const perShareAvg = perShare.reduce((a, b) => a + b, 0) / trades.length;
 
   const wins = trades.filter((t) => t.realized > 0);
@@ -104,17 +103,14 @@ function calculateStats(trades: Trade[] | undefined): {
         value: `$${averageTrade.toFixed(2)}`,
       },
       { label: "Total Number of Trades", value: `${trades.length}` },
-      // { label: "Average Hold Time (scratch trades)", value: "0" },
-      // { label: "Number of Scratch Trades", value: `${scratchTrades.length}` },
       { label: "Trade P&L Standard Deviation", value: `$${stdDev.toFixed(2)}` },
       { label: "Kelly Percentage", value: `${kelly.toFixed(2)}%` },
       { label: "Total Commissions", value: `$${totalCommissions.toFixed(2)}` },
-      // { label: "Average position MAE", value: "🔒", locked: true },
     ],
     right: [
       { label: "Largest Gain", value: `$${largestGain.toFixed(2)}` },
       { label: "Largest Loss", value: `$${largestLoss.toFixed(2)}` },
-      { label: "Average Daily Volume", value: "124" }, // Replace with actual logic if needed
+      { label: "Average Daily Volume", value: "124" },
       {
         label: "Average Per-share Gain/Loss",
         value: `$${perShareAvg.toFixed(2)}`,
@@ -132,9 +128,6 @@ function calculateStats(trades: Trade[] | undefined): {
       { label: "Max Consecutive Wins", value: `${maxWinStreak}` },
       { label: "Max Consecutive Losses", value: `${maxLossStreak}` },
       { label: "System Quality Number (SQN)", value: `${sqn.toFixed(2)}` },
-      // { label: "K-Ratio", value: "🔒", locked: true },
-      // { label: "Total Fees", value: "🔒", locked: true },
-      // { label: "Probability of Random Chance", value: "🔒", locked: true },
       {
         label: "Profit factor",
         value:
@@ -154,6 +147,25 @@ export default function StatTable() {
   } = useSWR<Trade[]>("/trade/", fetcher);
 
   const { left, right } = useMemo(() => calculateStats(trades), [trades]);
+
+  if (isLoading) {
+    return (
+      <div className="bg-card text-card-foreground flex flex-col items-center justify-center rounded-xl border py-10 shadow-sm px-6">
+        <p className="text-muted-foreground text-sm">Loading statistics...</p>
+      </div>
+    );
+  }
+
+  if (!trades || trades.length === 0) {
+    return (
+      <div className="bg-card text-card-foreground flex flex-col items-center justify-center rounded-xl border py-10 shadow-sm px-6">
+        <h2 className="text-lg font-semibold">No Trades Available</h2>
+        <p className="text-muted-foreground text-sm mt-2">
+          Connect an account and add trades to see your full statistics here.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm px-6">
