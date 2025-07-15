@@ -1,3 +1,8 @@
+import { Trade } from "@/actions/trades/trades";
+import { fetcher } from "@/lib/fetcher";
+import useSWR from "swr";
+import { useMemo } from "react";
+
 type StatItem = {
   label: string;
   value: string;
@@ -5,45 +10,166 @@ type StatItem = {
   locked?: boolean;
 };
 
-const statsLeft: StatItem[] = [
-  { label: "Total Gain/Loss", value: "-$11.51" },
-  { label: "Average Daily Gain/Loss", value: "-$1.44" },
-  { label: "Average Trade Gain/Loss", value: "-$0.89" },
-  { label: "Total Number of Trades", value: "13" },
-  { label: "Average Hold Time (scratch trades)", value: "0" },
-  { label: "Number of Scratch Trades", value: "0" },
-  { label: "Trade P&L Standard Deviation", value: "$7.84" },
-  { label: "Kelly Percentage", value: "🔒", locked: true },
-  { label: "Total Commissions", value: "🔒", locked: true },
-  { label: "Average position MAE", value: "🔒", locked: true },
-];
+function calculateStats(trades: Trade[] | undefined): {
+  left: StatItem[];
+  right: StatItem[];
+} {
+  if (!trades || trades.length === 0) {
+    return { left: [], right: [] };
+  }
 
-const statsRight: StatItem[] = [
-  { label: "Largest Gain", value: "$10.50" },
-  { label: "Largest Loss", value: "-$13.65" },
-  { label: "Average Daily Volume", value: "124" },
-  { label: "Average Per-share Gain/Loss", value: "-$0.02" },
-  { label: "Average Winning Trade", value: "$6.35" },
-  { label: "Average Losing Trade", value: "-$7.08" },
-  { label: "Number of Winning Trades", value: "6 (46.2%)" },
-  { label: "Number of Losing Trades", value: "7 (53.8%)" },
-  { label: "Average Hold Time (winning trades)", value: "13 minutes" },
-  { label: "Average Hold Time (losing trades)", value: "14 minutes" },
-  { label: "Max Consecutive Wins", value: "2" },
-  { label: "Max Consecutive Losses", value: "2" },
-  { label: "System Quality Number (SQN)", value: "🔒", locked: true },
-  { label: "K-Ratio", value: "🔒", locked: true },
-  { label: "Total Fees", value: "🔒", locked: true },
-  { label: "Probability of Random Chance", value: "🔒", locked: true },
-  { label: "Profit factor", value: "0.77" },
-];
+  const realized = trades
+    .map((t) => Number(t.realized))
+    .filter((r) => !isNaN(r));
+  const totalGainLoss = realized.reduce((a, b) => a + b, 0);
+  const averageTrade = totalGainLoss / trades.length;
+  const tradeDates = [...new Set(trades.map((t) => t.date))];
+  const averageDaily = totalGainLoss / tradeDates.length;
+  const stdDev = Math.sqrt(
+    realized.reduce((sum, r) => sum + Math.pow(r - averageTrade, 2), 0) /
+      (trades.length - 1 || 1)
+  );
+  const scratchTrades = trades.filter((t) => t.realized === 0);
+  const largestGain = Math.max(...realized);
+  const largestLoss = Math.min(...realized);
+  const perShare = trades.map((t) =>
+    t.quantity ? Number(t.realized) / t.quantity : 0
+  );
+
+  const perShareAvg = perShare.reduce((a, b) => a + b, 0) / trades.length;
+
+  const wins = trades.filter((t) => t.realized > 0);
+  const losses = trades.filter((t) => t.realized < 0);
+  const winAvg =
+    wins.length > 0
+      ? wins.reduce((sum, t) => sum + Number(t.realized), 0) / wins.length
+      : 0;
+  const lossAvg =
+    losses.length > 0
+      ? losses.reduce((sum, t) => sum + Number(t.realized), 0) / losses.length
+      : 0;
+  const winRate = (wins.length / trades.length) * 100;
+
+  let maxWinStreak = 0;
+  let maxLossStreak = 0;
+  let currentWinStreak = 0;
+  let currentLossStreak = 0;
+
+  for (const t of trades) {
+    if (t.realized > 0) {
+      currentWinStreak++;
+      maxWinStreak = Math.max(maxWinStreak, currentWinStreak);
+      currentLossStreak = 0;
+    } else if (t.realized < 0) {
+      currentLossStreak++;
+      maxLossStreak = Math.max(maxLossStreak, currentLossStreak);
+      currentWinStreak = 0;
+    } else {
+      currentWinStreak = 0;
+      currentLossStreak = 0;
+    }
+  }
+
+  const totalWin = wins.reduce((sum, t) => sum + Number(t.realized), 0);
+  const totalLoss = losses.reduce((sum, t) => sum + Number(t.realized), 0);
+
+  const profitFactor = totalLoss < 0 ? Math.abs(totalWin / totalLoss) : "N/A";
+
+  const totalCommissions = trades.reduce(
+    (sum, t) => sum + Number(t.fees || 0),
+    0
+  );
+
+  const sqn =
+    stdDev > 0 ? (averageTrade / stdDev) * Math.sqrt(trades.length) : 0;
+
+  const KwinRate = wins.length / trades.length;
+  const avgWin = winAvg;
+  const avgLoss = Math.abs(lossAvg);
+
+  const kelly =
+    avgLoss === 0 || avgWin === 0
+      ? 0
+      : KwinRate - (1 - KwinRate) * (avgLoss / avgWin);
+
+  return {
+    left: [
+      { label: "Total Gain/Loss", value: `$${totalGainLoss.toFixed(2)}` },
+      {
+        label: "Average Daily Gain/Loss",
+        value: `$${averageDaily.toFixed(2)}`,
+      },
+      {
+        label: "Average Trade Gain/Loss",
+        value: `$${averageTrade.toFixed(2)}`,
+      },
+      { label: "Total Number of Trades", value: `${trades.length}` },
+      // { label: "Average Hold Time (scratch trades)", value: "0" },
+      // { label: "Number of Scratch Trades", value: `${scratchTrades.length}` },
+      { label: "Trade P&L Standard Deviation", value: `$${stdDev.toFixed(2)}` },
+      { label: "Kelly Percentage", value: `${kelly.toFixed(2)}%` },
+      { label: "Total Commissions", value: `$${totalCommissions.toFixed(2)}` },
+      // { label: "Average position MAE", value: "🔒", locked: true },
+    ],
+    right: [
+      { label: "Largest Gain", value: `$${largestGain.toFixed(2)}` },
+      { label: "Largest Loss", value: `$${largestLoss.toFixed(2)}` },
+      { label: "Average Daily Volume", value: "124" }, // Replace with actual logic if needed
+      {
+        label: "Average Per-share Gain/Loss",
+        value: `$${perShareAvg.toFixed(2)}`,
+      },
+      { label: "Average Winning Trade", value: `$${winAvg.toFixed(2)}` },
+      { label: "Average Losing Trade", value: `$${lossAvg.toFixed(2)}` },
+      {
+        label: "Number of Winning Trades",
+        value: `${wins.length} (${winRate.toFixed(1)}%)`,
+      },
+      {
+        label: "Number of Losing Trades",
+        value: `${losses.length} (${(100 - winRate).toFixed(1)}%)`,
+      },
+      { label: "Max Consecutive Wins", value: `${maxWinStreak}` },
+      { label: "Max Consecutive Losses", value: `${maxLossStreak}` },
+      { label: "System Quality Number (SQN)", value: `${sqn.toFixed(2)}` },
+      // { label: "K-Ratio", value: "🔒", locked: true },
+      // { label: "Total Fees", value: "🔒", locked: true },
+      // { label: "Probability of Random Chance", value: "🔒", locked: true },
+      {
+        label: "Profit factor",
+        value:
+          typeof profitFactor === "string"
+            ? profitFactor
+            : profitFactor.toFixed(2),
+      },
+    ],
+  };
+}
+
 export default function StatTable() {
+  const {
+    data: trades,
+    error,
+    isLoading,
+  } = useSWR<Trade[]>("/trade/", fetcher);
+
+  const { left, right } = useMemo(() => calculateStats(trades), [trades]);
+
   return (
-    <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm px-4">
-      <h2 className="text-lg font-medium mb-4">Full Statistics</h2>
+    <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm px-6">
+      <div className="flex-1">
+        <h2 className="text-lg font-semibold">Full Statistics</h2>
+        <p className="text-muted-foreground text-sm">
+          Full statistics show a complete picture of your trading system's
+          performance. All the metrics are calculated based on the data from
+          your connected accounts. The metrics are grouped into two sections:
+          the left section shows general statistics, and the right section shows
+          detailed statistics.
+        </p>
+      </div>
       <div className="grid md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          {statsLeft.map((stat, idx) => (
+        <div className="space-y-2 pb-4 mb-4 md:pb-0 md:mb-0">
+          {left.map((stat, idx) => (
             <div key={idx} className="flex justify-between">
               <span className="text-sm text-muted-foreground">
                 {stat.label}
@@ -59,7 +185,7 @@ export default function StatTable() {
           ))}
         </div>
         <div className="space-y-2">
-          {statsRight.map((stat, idx) => (
+          {right.map((stat, idx) => (
             <div key={idx} className="flex justify-between">
               <span className="text-sm text-muted-foreground">
                 {stat.label}
