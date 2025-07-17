@@ -28,6 +28,7 @@ import { Logout } from "@/actions/users/auth";
 import { toast } from "sonner";
 import { useUserStore } from "@/stores/user-store";
 import { Skeleton } from "@/components/ui/skeleton"
+import Link from "next/link";
 export function NavUser() {
   const { isMobile } = useSidebar();
   const router = useRouter();
@@ -99,9 +100,11 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
+              <DropdownMenuItem >
+                <Link href="/dashboard/user" className="flex items-center gap-2">
+                  <IconUserCircle />
+                  Profile
+                </Link>
               </DropdownMenuItem>
               {/* <DropdownMenuItem>
                 <IconCreditCard />

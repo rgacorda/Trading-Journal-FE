@@ -57,7 +57,7 @@ export function ProfileInfo() {
       <CardContent>
         <div className="flex flex-col md:flex-row gap-6">
           {/* Profile Photo Section */}
-          <div className="flex flex-col items-center space-y-4 md:min-w-[200px]">
+          {/* <div className="flex flex-col items-center space-y-4 md:min-w-[200px]">
             <div className="relative">
               <Avatar className="w-32 h-32">
                 <AvatarImage src={profileImage} alt="Profile" />
@@ -85,7 +85,7 @@ export function ProfileInfo() {
                 Remove
               </Button>
             </div>
-          </div>
+          </div> */}
 
           {/* Personal Information Section */}
           <div className="flex-1 space-y-4">

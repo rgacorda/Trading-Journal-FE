@@ -1,16 +1,30 @@
-"use client"
-import { GalleryVerticalEnd, TrendingUp } from "lucide-react"
+"use client";
+import { TrendingUp } from "lucide-react";
 
-
-import { LoginForm } from "./_components/login-form"
-import Link from "next/link"
+import { LoginForm } from "./_components/login-form";
+import Link from "next/link";
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
+  const expired = searchParams.get("expired");
+
+  useEffect(() => {
+    if (expired === "1") {
+      toast.warning("Session expired. Please log in again.");
+    }
+  }, [expired]);
+
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
-          <Link href="/" className="flex items-center gap-2 font-medium text-xl font-medium text-gray-900">
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-medium text-xl font-medium text-gray-900"
+          >
             <TrendingUp className="h-8 w-8 text-gray-900" />
             Trade2Learn
           </Link>
@@ -29,5 +43,5 @@ export default function LoginPage() {
         />
       </div>
     </div>
-  )
+  );
 }
