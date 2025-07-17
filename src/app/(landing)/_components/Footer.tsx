@@ -30,7 +30,7 @@ const Footer = () => {
               The most comprehensive trading journal and analytics platform. 
               Track, analyze, and improve your trading performance with advanced statistics and insights.
             </p>
-            <div className="space-y-3">
+            {/* <div className="space-y-3">
               <div className="flex items-center">
                 <Mail className="h-5 w-5 text-gray-400 mr-3" />
                 <span className="text-gray-400">support@trade2learn.com</span>
@@ -43,11 +43,11 @@ const Footer = () => {
                 <MapPin className="h-5 w-5 text-gray-400 mr-3" />
                 <span className="text-gray-400">New York, NY 10001</span>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Links */}
-          {Object.entries(footerLinks).map(([category, links]) => (
+          {/* {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
               <h3 className="text-lg font-semibold mb-4">{category}</h3>
               <ul className="space-y-3">
@@ -63,7 +63,7 @@ const Footer = () => {
                 ))}
               </ul>
             </div>
-          ))}
+          ))} */}
         </div>
 
         {/* Bottom Section */}
@@ -73,7 +73,7 @@ const Footer = () => {
               © 2025 Trade2Learn. All rights reserved.
             </div>
             
-            <div className="flex space-x-6">
+            {/* <div className="flex space-x-6">
               {socialLinks.map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
@@ -84,7 +84,7 @@ const Footer = () => {
                   <Icon className="h-6 w-6" />
                 </a>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

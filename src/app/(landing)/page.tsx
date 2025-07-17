@@ -1,3 +1,4 @@
+import About from "./_components/About";
 import CTA from "./_components/CTA";
 import Features from "./_components/Features";
 import Footer from "./_components/Footer";
@@ -10,9 +11,10 @@ import Testimonials from "./_components/Testimonials";
 
 function Home() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       <Header />
       <Hero />
+      <About />
       <Features />
       <Statistics />
       <Testimonials />
