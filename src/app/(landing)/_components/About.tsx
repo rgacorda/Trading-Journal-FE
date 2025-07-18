@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import { TrendingUp, Target, Code, Lightbulb, CheckCircle, ArrowRight, Monitor } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -118,7 +119,7 @@ const About = () => {
       </div>
 
       {/* Platform Preview */}
-      <div className="space-y-6">
+      {/* <div className="space-y-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold leading-tight tracking-tighter md:text-4xl">
             Platform Preview
@@ -139,7 +140,7 @@ const About = () => {
             <CardContent>
               <div className="aspect-video rounded-lg border bg-muted overflow-hidden mb-4">
                 <img 
-                  src="/src/assets/Screenshot 2025-07-17 at 1.45.05 PM.png" 
+                  src="/src/assets/SS1.png" 
                   alt="Trade2Learn Dashboard"
                   className="w-full h-full object-cover"
                 />
@@ -160,7 +161,7 @@ const About = () => {
             <CardContent>
               <div className="aspect-video rounded-lg border bg-muted overflow-hidden mb-4">
                 <img 
-                  src="/src/assets/Screenshot 2025-07-17 at 1.45.25 PM.png" 
+                  src="/assets/SS1.png" 
                   alt="Trade2Learn Analytics"
                   className="w-full h-full object-cover"
                 />
@@ -192,7 +193,7 @@ const About = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </div> */}
 
       {/* Values */}
       <div className="space-y-6">
