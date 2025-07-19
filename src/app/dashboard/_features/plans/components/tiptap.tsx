@@ -1,13 +1,33 @@
 import { createPlan } from "@/actions/plans/plans";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IconPlus } from "@tabler/icons-react";
+import { AxiosError } from "axios";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { mutate } from "swr";
@@ -36,7 +56,7 @@ export default function TiptapEditor({ open, onOpenChange }: ProfileFormProps) {
           <DialogHeader>
             <DialogTitle>Add new Plan</DialogTitle>
             <DialogDescription>
-              Add your new trading plan here. Click add when you're done.
+              Add your new trading plan here. Click add when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
           <ProfileForm onOpenChange={onOpenChange} />
@@ -52,7 +72,7 @@ export default function TiptapEditor({ open, onOpenChange }: ProfileFormProps) {
           <DrawerHeader className="text-left">
             <DrawerTitle>Add new Plan</DrawerTitle>
             <DrawerDescription>
-              Add your new trading plan here. Click add when you're done.
+              Add your new trading plan here. Click add when you&apos;re done.
             </DrawerDescription>
           </DrawerHeader>
           <ProfileForm className="px-4" onOpenChange={onOpenChange} />
@@ -82,18 +102,18 @@ function ProfileForm({
     },
   });
 
-
-
   const onSubmit = async (values: FormValues) => {
     try {
-      await createPlan({
-        name: values.name
-      });
+      await createPlan({ name: values.name });
       mutate("/plan/");
-      toast.success("Account created successfully.");
+      toast.success("Plan created successfully.");
       onOpenChange(false);
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err) {
+      const error = err as AxiosError;
+
+      const message = error.message || "Failed to create plan.";
+
+      toast.error(message);
     }
   };
 
@@ -103,8 +123,6 @@ function ProfileForm({
         className={cn("grid items-start gap-4", className)}
         onSubmit={methods.handleSubmit(onSubmit)}
       >
-
-
         <FormField
           name="name"
           render={({ field }) => (
@@ -117,7 +135,6 @@ function ProfileForm({
             </FormItem>
           )}
         />
-
 
         <Button type="submit">Add Account</Button>
       </form>

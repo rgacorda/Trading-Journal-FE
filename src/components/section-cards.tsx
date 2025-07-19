@@ -16,9 +16,22 @@ interface MainSectionCardsProps {
     totalWinRate: number;
     totalTrades: number;
     expectancy: number;
+    pnlratio: number;
+    totalRevenueLastMonth: number | undefined;
+    expectancyChangePercentage: number;
   }
 }
 export function SectionCards(data: MainSectionCardsProps) {
+
+const revenueIncrease = data.data.totalRevenueLastMonth
+  ? data.data.totalRevenue ?? 0 - data.data.totalRevenueLastMonth
+  : 0;
+const revenueIncreasePercentage = revenueIncrease
+  ? (revenueIncrease / (data.data.totalRevenueLastMonth ?? 1)) * 100
+  : 0;
+const revenueIncreaseOrDecrease = revenueIncrease >= 0 ? "increase" : "decrease";
+
+
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
@@ -37,8 +50,17 @@ export function SectionCards(data: MainSectionCardsProps) {
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
+              {revenueIncreaseOrDecrease === "decrease" ? (
+                <>
+                  <IconTrendingDown />
+                  {Math.abs(revenueIncreasePercentage).toFixed(1)}%
+                </>
+              ) : (
+                <>
+                  <IconTrendingUp />
+                  {revenueIncreasePercentage.toFixed(1)}%
+                </>
+              )}
             </Badge>
           </CardAction>
         </CardHeader>
@@ -65,12 +87,12 @@ export function SectionCards(data: MainSectionCardsProps) {
               {data.data.totalWinRate?.toFixed(2) ?? 0}
             </span>
           </CardTitle>
-          <CardAction>
+          {/* <CardAction>
             <Badge variant="outline">
               <IconTrendingDown />
               -20%
             </Badge>
-          </CardAction>
+          </CardAction> */}
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
@@ -83,22 +105,22 @@ export function SectionCards(data: MainSectionCardsProps) {
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Total Trades</CardDescription>
+          <CardDescription>Profit and Loss Ratio</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {data.data.totalTrades}
+            {data.data.pnlratio.toFixed(2)}
           </CardTitle>
-          <CardAction>
+          {/* <CardAction>
             <Badge variant="outline">
               <IconTrendingUp />
               +12.5%
             </Badge>
-          </CardAction>
+          </CardAction> */}
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <IconTrendingUp className="size-4" />
+            P/L ratio trend
           </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
+          <div className="text-muted-foreground">Consistent profitability growth</div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
@@ -117,16 +139,37 @@ export function SectionCards(data: MainSectionCardsProps) {
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <IconTrendingUp />
-              +4.5%
+              {data.data.expectancyChangePercentage >= 0 ? (
+                <>
+                  <IconTrendingUp />
+                  +{data.data.expectancyChangePercentage.toFixed(1)}%
+                </>
+              ) : (
+                <>
+                  <IconTrendingDown />
+                  {data.data.expectancyChangePercentage.toFixed(1)}%
+                </>
+              )}
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase <IconTrendingUp className="size-4" />
+            {data.data.expectancyChangePercentage >= 0 ? (
+              <>
+                Steady performance increase <IconTrendingUp className="size-4" />
+              </>
+            ) : (
+              <>
+                Performance decrease <IconTrendingDown className="size-4" />
+              </>
+            )}
           </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
+          <div className="text-muted-foreground">
+            {data.data.expectancyChangePercentage >= 0
+              ? "Meets growth projections"
+              : "Falls short of growth projections"}
+          </div>
         </CardFooter>
       </Card>
     </div>

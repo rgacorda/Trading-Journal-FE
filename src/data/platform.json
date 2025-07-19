@@ -1,9 +1,5 @@
 [
   {
-    "label": "TradeZero Main",
-    "value": "tz_main"
-  },
-  {
     "label": "TradeZero Pro",
     "value": "tz_pro"
   }

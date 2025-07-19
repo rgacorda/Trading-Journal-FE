@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { useForm, FormProvider, Form } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -36,6 +36,7 @@ import { mutate } from "swr";
 import { useTradeUIStore } from "@/stores/trade-ui-store";
 import { getTradebyId, updateTrade } from "@/actions/trades/trades";
 import { Badge } from "@/components/ui/badge";
+import { AxiosError } from "axios";
 
 const formSchema = z.object({
   mistake_input: z
@@ -58,7 +59,7 @@ export default function MistakesUpdateCard() {
           <DialogHeader>
             <DialogTitle>Edit Mistakes</DialogTitle>
             <DialogDescription>
-              Add your Mistakes here. Click save when you're done.
+              Add your Mistakes here. Click save when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
           <AccountForm onOpenChange={onOpenChange} selectedId={selectedId} />
@@ -74,7 +75,7 @@ export default function MistakesUpdateCard() {
           <DrawerHeader className="text-left">
             <DrawerTitle>Edit Mistakes</DrawerTitle>
             <DrawerDescription>
-              Add your Mistakes here. Click save when you're done.
+              Add your Mistakes here. Click save when you&apos;re done.
             </DrawerDescription>
           </DrawerHeader>
           <AccountForm
@@ -114,34 +115,40 @@ function AccountForm({
   React.useEffect(() => {
     if (!selectedId) return;
 
-    (async () => {
+    const fetchTrade = async () => {
       try {
         const trade = await getTradebyId(selectedId);
         if (Array.isArray(trade?.mistakes)) {
           setMistakes(trade.mistakes);
         }
-      } catch (err: any) {
-        toast.error("Failed to fetch trade data.");
+      } catch (err) {
+        const error = err as AxiosError;
+        const message =
+          error.message ||
+          "Failed to fetch trade data.";
+        toast.error(message);
       }
-    })();
+    };
+
+    fetchTrade();
   }, [selectedId]);
 
   const onSubmit = async () => {
-  if (!selectedId) return;
-  try {
+    if (!selectedId) return;
 
-    await updateTrade(selectedId, {
-      mistakes: mistakes,
-    })
-    mutate("/trade/"); 
-    toast.success("Mistakes updated successfully.");
-    onOpenChange(false);
-  } catch (err: any) {
-    toast.error(err.message);
-  }
-};
-
-
+    try {
+      await updateTrade(selectedId, { mistakes });
+      mutate("/trade/");
+      toast.success("Mistakes updated successfully.");
+      onOpenChange(false);
+    } catch (err) {
+      const error = err as AxiosError;
+      const message =
+        error.message ||
+        "Failed to update mistakes.";
+      toast.error(message);
+    }
+  };
 
   return (
     <FormProvider {...methods}>
@@ -185,7 +192,7 @@ function AccountForm({
             <Badge
               key={index}
               variant={"outline"}
-            //   className="bg-muted px-2 py-1 rounded text-sm flex items-center gap-1"
+              //   className="bg-muted px-2 py-1 rounded text-sm flex items-center gap-1"
             >
               {item}
               <button

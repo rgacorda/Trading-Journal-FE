@@ -1,9 +1,7 @@
 "use client";
 import {
-  IconCreditCard,
   IconDotsVertical,
   IconLogout,
-  IconNotification,
   IconUserCircle,
 } from "@tabler/icons-react";
 
@@ -28,6 +26,8 @@ import { Logout } from "@/actions/users/auth";
 import { toast } from "sonner";
 import { useUserStore } from "@/stores/user-store";
 import { Skeleton } from "@/components/ui/skeleton"
+import Link from "next/link";
+import { AxiosError } from "axios";
 export function NavUser() {
   const { isMobile } = useSidebar();
   const router = useRouter();
@@ -41,7 +41,9 @@ export function NavUser() {
       router.push("/");
       toast.success("Logged out successfully");
     } catch (error) {
-      toast.error("Logout failed");
+      const axiosError = error as AxiosError<{ message?: string }>;
+      const errorMessage = axiosError.response?.data?.message || "Logout failed";
+      toast.error(errorMessage);
     }
   };
 
@@ -99,9 +101,11 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
+              <DropdownMenuItem >
+                <Link href="/dashboard/user" className="flex items-center gap-2">
+                  <IconUserCircle />
+                  Profile
+                </Link>
               </DropdownMenuItem>
               {/* <DropdownMenuItem>
                 <IconCreditCard />

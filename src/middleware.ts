@@ -1,3 +1,4 @@
+// middleware.ts
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -10,24 +11,21 @@ export function middleware(req: NextRequest) {
   const isPublic = PUBLIC_ROUTES.includes(pathname)
 
   if (token) {
-    // If logged in, prevent access to login/register pages
     if (pathname === '/login' || pathname === '/register') {
-      // Redirect logged-in users to homepage or dashboard
       return NextResponse.redirect(new URL('/dashboard/main', req.url))
     }
-    // Allow access to all other routes when logged in
     return NextResponse.next()
   } else {
-    // If NOT logged in
     if (isPublic) {
-      // Allow access to public routes
       return NextResponse.next()
     }
-    // Block access to other routes, redirect to login
-    return NextResponse.redirect(new URL('/login', req.url))
+    // 👇 Append ?expired=1 to login URL
+    const loginUrl = new URL('/login', req.url)
+    loginUrl.searchParams.set('expired', '1')
+    return NextResponse.redirect(loginUrl)
   }
 }
 
 export const config = {
-  matcher: ['/((?!_next|favicon.ico|api).*)'], // exclude Next.js internals and API routes
+  matcher: ['/((?!_next|favicon.ico|api).*)'],
 }

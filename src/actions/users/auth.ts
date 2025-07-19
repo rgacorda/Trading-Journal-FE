@@ -1,4 +1,5 @@
 import api from "@/lib/axios";
+import { AxiosError } from "axios";
 
 type LoginCredentials = {
   email: string;
@@ -13,24 +14,38 @@ type RegisterCredentials = {
   phone: string;
 };
 
+// ✅ Reusable error handler
+const handleAxiosError = (error: unknown, fallbackMessage: string): never => {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "isAxiosError" in error
+  ) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    console.error(fallbackMessage, axiosError.response?.data || axiosError.message);
+    throw new Error(axiosError.response?.data?.message || fallbackMessage);
+  }
+
+  console.error(fallbackMessage, (error as Error).message);
+  throw new Error(fallbackMessage);
+};
+
 export async function Register(data: RegisterCredentials) {
   try {
     const res = await api.post("/auth/register", data);
     return res.data;
-  } catch (error: any) {
-    console.error("Registration failed:", error?.response?.data || error.message);
-    throw new Error(error?.response?.data?.message || "Registration failed");
+  } catch (error: unknown) {
+    handleAxiosError(error, "Registration failed");
   }
 }
 
 export async function Login(data: LoginCredentials) {
   try {
     const res = await api.post("/auth/login", data, { withCredentials: true });
-    console.log(res.data)
+    console.log(res.data);
     return res.data;
-  } catch (error: any) {
-    console.error("Login failed:", error?.response?.data || error.message);
-    throw new Error(error?.response?.data?.message || "Login failed");
+  } catch (error: unknown) {
+    handleAxiosError(error, "Login failed");
   }
 }
 
@@ -38,9 +53,7 @@ export async function Logout() {
   try {
     const res = await api.post("/auth/logout", {}, { withCredentials: true });
     return res.data;
-  } catch (error: any) {
-    console.error("Logout failed:", error?.response?.data || error.message);
-    throw new Error(error?.response?.data?.message || "Logout failed");
+  } catch (error: unknown) {
+    handleAxiosError(error, "Logout failed");
   }
 }
-

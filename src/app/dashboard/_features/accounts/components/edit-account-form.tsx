@@ -3,7 +3,7 @@ import * as React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+  import { AxiosError } from "axios";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
@@ -69,10 +69,10 @@ export default function EditAccountForm() {
           <DialogHeader>
             <DialogTitle>Edit Account</DialogTitle>
             <DialogDescription>
-              Edit your trading account here. Click save when you're done.
+              Edit your trading account here. Click save when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
-          <AccountForm onOpenChange={onOpenChange} selectedId={selectedId}/>
+          <AccountForm onOpenChange={onOpenChange} selectedId={selectedId} />
         </DialogContent>
       </Dialog>
     );
@@ -85,10 +85,14 @@ export default function EditAccountForm() {
           <DrawerHeader className="text-left">
             <DrawerTitle>Edit Account</DrawerTitle>
             <DrawerDescription>
-              Edit your trading account here. Click save when you're done.
+              Edit your trading account here. Click save when you&apos;re done.
             </DrawerDescription>
           </DrawerHeader>
-          <AccountForm className="px-4" onOpenChange={onOpenChange} selectedId={selectedId}/>
+          <AccountForm
+            className="px-4"
+            onOpenChange={onOpenChange}
+            selectedId={selectedId}
+          />
           <DrawerFooter className="pt-2">
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
@@ -127,8 +131,11 @@ function AccountForm({
   // }, [platformValue, setValue]);
   const { reset } = methods;
 
+
+
   React.useEffect(() => {
     if (!selectedId) return;
+
     (async () => {
       try {
         const data: Account = await getAccountById(selectedId);
@@ -136,8 +143,12 @@ function AccountForm({
           account_name: data.name,
           account_value: Number(data.balance),
         });
-      } catch (err: any) {
-        toast.error("Failed to load account.");
+      } catch (err) {
+        const error = err as AxiosError<{ message?: string }>;
+        const message =
+          error.response?.data?.message || "Failed to load account.";
+        console.error("Fetch account error:", message);
+        toast.error(message);
       }
     })();
   }, [selectedId, reset]);
@@ -147,12 +158,16 @@ function AccountForm({
       await updateAccount(selectedId, {
         name: values.account_name,
         balance: Number(values.account_value),
-      })
+      });
+
       toast.success("Account edited successfully.");
       mutate("/account/");
       onOpenChange(false);
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      const message = error.response?.data?.message || "Account update failed.";
+      console.error("Update account error:", message);
+      toast.error(message);
     }
   };
 

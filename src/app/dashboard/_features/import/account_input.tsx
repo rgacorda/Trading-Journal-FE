@@ -20,7 +20,7 @@ interface AccountInputProps {
   }
 export function AccountInput({value, setValue}: AccountInputProps) {
 
-    const { data, error, isLoading, mutate} = useSWR<Account[]>("/account/", fetcher);
+    const { data} = useSWR<Account[]>("/account/", fetcher);
 
 
   return (

@@ -3,16 +3,20 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AxiosError } from "axios";
 import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
@@ -20,9 +24,9 @@ import { mutate } from "swr";
 
 interface PlansCardProps {
   id: string;
-  image: string|null;
+  image: string | null;
   title: string;
-  subtext: string|null;
+  subtext: string | null;
 }
 export default function PlansCard(props: PlansCardProps) {
   const handleDelete = async () => {
@@ -30,10 +34,16 @@ export default function PlansCard(props: PlansCardProps) {
       await deletePlan(props.id);
       mutate("/plan/");
       toast.success("Plan deleted successfully.");
-    } catch (error: any) {
-      toast.error("Failed to delete plan.");
+    } catch (error) {
+      const axiosError = error as AxiosError;
+
+      const message =
+        axiosError.message ||
+        "Failed to delete plan.";
+
+      toast.error(message);
     }
-  }
+  };
 
   return (
     <Card className="w-full max-w-sm">
@@ -64,10 +74,7 @@ export default function PlansCard(props: PlansCardProps) {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="text-red-500"
-                onClick={handleDelete}
-              >
+              <DropdownMenuItem className="text-red-500" onClick={handleDelete}>
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>

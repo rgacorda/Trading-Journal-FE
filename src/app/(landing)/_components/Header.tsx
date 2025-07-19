@@ -15,7 +15,9 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2">
-            <TrendingUp className="h-8 w-8 text-gray-900" />
+            <Link href="/" className="flex items-center gap-2 font-medium text-xl font-medium text-gray-900">
+              <TrendingUp className="h-8 w-8 text-gray-900" />
+            </Link>
             <span className="text-xl font-medium text-gray-900">Trade2Learn</span>
           </div>
 
@@ -30,9 +32,9 @@ const Header = () => {
             <a href="#about" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
               About
             </a>
-            <a href="#contact" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
+            {/* <a href="#contact" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
               Contact
-            </a>
+            </a> */}
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -66,9 +68,9 @@ const Header = () => {
               <a href="#about" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
                 About
               </a>
-              <a href="#contact" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
+              {/* <a href="#contact" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
                 Contact
-              </a>
+              </a> */}
               <div className="flex flex-col space-y-2 pt-4 border-t border-gray-100">
                 <button className="text-left text-gray-600 hover:text-gray-900 transition-colors duration-200">
                   Sign In

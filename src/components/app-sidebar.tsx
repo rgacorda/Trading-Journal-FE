@@ -8,8 +8,6 @@ import {
   IconDashboard,
   IconFileAi,
   IconFileDescription,
-  IconHelp,
-  IconInnerShadowTop,
   IconListDetails,
   IconUsers,
 } from "@tabler/icons-react";
@@ -26,9 +24,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useUserStore } from "@/stores/user-store";
 import { TrendingUp } from "lucide-react";
-import { getUser } from "@/actions/users/user";
+import Link from "next/link";
 
 const data = {
   // user: {
@@ -163,7 +160,6 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const setUser = useUserStore((state) => state.setUser);
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -174,10 +170,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="/dashboard/main">
+              <Link href="/dashboard/main">
                 <TrendingUp className="h-8 w-8 text-gray-900" />
                 <span className="text-xl font-medium text-gray-900">Trade2Learn</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

@@ -1,26 +1,27 @@
 import React from 'react';
 import { Star, Quote } from 'lucide-react';
+import Image from 'next/image';
 
 const Testimonials = () => {
   const testimonials = [
     {
       name: 'Sarah Chen',
       role: 'Day Trader',
-      image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+      image: '/assets/pexels1.jpeg',
       rating: 5,
       content: 'Trade2Learn transformed my trading. The analytics helped me identify my weaknesses and improve my win rate from 45% to 72% in just 4 months.'
     },
     {
       name: 'Michael Rodriguez',
       role: 'Swing Trader',
-      image: 'https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+      image: '/assets/pexels2.jpeg',
       rating: 5,
       content: 'The risk management tools are incredible. I finally have control over my position sizing and my account has grown consistently since using Trade2Learn.'
     },
     {
       name: 'Emily Johnson',
       role: 'Options Trader',
-      image: 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+      image: '/assets/pexels3.jpeg',
       rating: 5,
       content: 'The journaling feature is a game-changer. Being able to document my thought process and review it later has made me a much more disciplined trader.'
     }
@@ -34,7 +35,7 @@ const Testimonials = () => {
             What Traders Say About Us
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Don't just take our word for it. Here's what successful traders are saying about Trade2Learn.
+            Don&apos;t just take our word for it. Here&apos;s what successful traders are saying about Trade2Learn.
           </p>
         </div>
 
@@ -53,14 +54,16 @@ const Testimonials = () => {
               </div>
 
               <p className="text-gray-700 mb-6 leading-relaxed">
-                "{testimonial.content}"
+                &ldquo;{testimonial.content}&ldquo;
               </p>
 
               <div className="flex items-center">
-                <img
-                  src={testimonial.image}
+                <Image
+                  src='/assets/SS1.png'
                   alt={testimonial.name}
                   className="w-12 h-12 rounded-full mr-4 object-cover"
+                  width={48}
+                  height={48}
                 />
                 <div>
                   <div className="font-semibold text-gray-900">{testimonial.name}</div>
