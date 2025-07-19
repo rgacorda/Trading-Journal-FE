@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Login } from "@/actions/users/auth";
@@ -20,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { AxiosError } from "axios";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -57,16 +57,27 @@ export function LoginForm({
   // };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const response = await Login(values);
-      useUserStore.getState().setUser(response.user);
-      toast.success("Logged in successfully");
-      router.push("/dashboard/main");
-    } catch (err: any) {
-      toast.error("Login Failed");
-      console.error(err);
+  try {
+    const response = await Login(values);
+    useUserStore.getState().setUser(response.user);
+    toast.success("Logged in successfully");
+    router.push("/dashboard/main");
+  } catch (err: unknown) {
+    let message = "Login Failed";
+
+    if (
+      typeof err === "object" &&
+      err !== null &&
+      "isAxiosError" in err
+    ) {
+      const axiosErr = err as AxiosError<{ message?: string }>;
+      message = axiosErr.response?.data?.message || message;
     }
-  };
+
+    toast.error(message);
+    console.error(err);
+  }
+};
 
   return (
     <Form {...form}>

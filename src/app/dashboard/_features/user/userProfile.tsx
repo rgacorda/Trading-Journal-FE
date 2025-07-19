@@ -2,7 +2,6 @@ import { Toaster } from "sonner";
 import { ChangePassword } from "./components/ChangePassword";
 import { DeleteAccount } from "./components/DeleteAccount";
 import { ProfileInfo } from "./components/ProfileInfo";
-import { User } from "lucide-react";
 
 
 function UserProfile() {

@@ -1,4 +1,5 @@
 import api from "@/lib/axios";
+import { AxiosError } from "axios";
 
 export type Trade = {
   id: string;
@@ -8,8 +9,6 @@ export type Trade = {
   entry: number;
   exit: number;
   fees: number;
-  // setup: string;
-  // plan: string;
   grade: number;
   mistakes: string[];
   notes: string;
@@ -21,13 +20,29 @@ export type Trade = {
   planId: string;
   account_id: string;
 };
+
+// ✅ Central error handler to avoid code duplication
+const handleAxiosError = (error: unknown, fallbackMessage: string): never => {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "isAxiosError" in error
+  ) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    console.error(fallbackMessage, axiosError.response?.data || axiosError.message);
+    throw new Error(axiosError.response?.data?.message || fallbackMessage);
+  }
+
+  console.error(fallbackMessage, (error as Error).message);
+  throw new Error(fallbackMessage);
+};
+
 export const getTrades = async () => {
   try {
     const res = await api.get("/trade/");
     return res.data;
-  } catch (error: any) {
-    console.error("Get trades failed:", error?.response?.data || error.message);
-    throw new Error(error?.response?.data?.message || "Get trades failed");
+  } catch (error: unknown) {
+    handleAxiosError(error, "Get trades failed");
   }
 };
 
@@ -35,12 +50,8 @@ export const createTrade = async (data: Trade) => {
   try {
     const res = await api.post("/trade/", data);
     return res.data;
-  } catch (error: any) {
-    console.error(
-      "Create trade failed:",
-      error?.response?.data || error.message
-    );
-    throw new Error(error?.response?.data?.message || "Create trade failed");
+  } catch (error: unknown) {
+    handleAxiosError(error, "Create trade failed");
   }
 };
 
@@ -49,9 +60,8 @@ export const getTradebyId = async (id: string | null) => {
   try {
     const res = await api.get(`/trade/${id}`);
     return res.data;
-  } catch (error: any) {
-    console.error("Get trade failed:", error?.response?.data || error.message);
-    throw new Error(error?.response?.data?.message || "Get trade failed");
+  } catch (error: unknown) {
+    handleAxiosError(error, "Get trade failed");
   }
 };
 
@@ -60,9 +70,8 @@ export const updateTrade = async (id: string | null, data: Partial<Trade>) => {
   try {
     const res = await api.put(`/trade/${id}`, data);
     return res.data;
-  } catch (error: any) {
-    console.error("Edit trade failed:", error?.response?.data || error.message);
-    throw new Error(error?.response?.data?.message || "Edit trade failed");
+  } catch (error: unknown) {
+    handleAxiosError(error, "Edit trade failed");
   }
 };
 
@@ -75,11 +84,7 @@ export const deleteTrades = async (ids: string[] | null) => {
       },
     });
     return res.data;
-  } catch (error: any) {
-    console.error(
-      "Delete trade failed:",
-      error?.response?.data || error.message
-    );
-    throw new Error(error?.response?.data?.message || "Delete trade failed");
+  } catch (error: unknown) {
+    handleAxiosError(error, "Delete trade failed");
   }
 };

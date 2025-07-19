@@ -8,7 +8,7 @@ import { Account } from "@/actions/accounts/account";
 import { MonthCalendar } from "./components/PnLmonth";
 import { DataTable } from "./table/data-table";
 import { columns } from "./table/columns";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function MainDashboard() {
   const { data: trades } = useSWR<Trade[]>("/trade/", fetcher);
@@ -56,8 +56,8 @@ export default function MainDashboard() {
     losingTrades.reduce((acc, t) => acc + Math.abs(Number(t.realized)), 0) /
     (losingTrades.length || 1);
 
-  const expectancy =
-    winRate * averageWin - (1 - winRate) * averageLoss;
+  // const expectancy =
+  //   winRate * averageWin - (1 - winRate) * averageLoss;
 
   const pnlratio = averageWin / (averageLoss || 1);
 

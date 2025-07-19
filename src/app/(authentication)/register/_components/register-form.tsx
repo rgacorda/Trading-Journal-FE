@@ -2,10 +2,8 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { Register } from "@/actions/users/auth";
 import {
   Form,
@@ -18,6 +16,7 @@ import {
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 
 const formSchema = z.object({
   firstname: z.string().min(2, {
@@ -52,20 +51,33 @@ export function RegisterForm({
 
   const router = useRouter();
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      await Register(values);
-      toast.success("Registered successfully");
-      router.push("/login");
-    } catch (err: any) {
-      if (err.message === "Email already exists.") {
-        toast.error("Email already exists.");
-        console.log(err);
-      } else {
-        toast.error("Registration failed. Please try again.");
+const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  try {
+    await Register(values);
+    toast.success("Registered successfully");
+    router.push("/login");
+  } catch (err: unknown) {
+    let message = "Registration failed. Please try again.";
+
+    if (
+      typeof err === "object" &&
+      err !== null &&
+      "isAxiosError" in err
+    ) {
+      const axiosErr = err as AxiosError<{ message?: string }>;
+      message = axiosErr.response?.data?.message || message;
+
+      if (message === "Email already exists.") {
+        toast.error(message);
+        console.log(axiosErr);
+        return;
       }
     }
-  };
+
+    toast.error(message);
+    console.error(err);
+  }
+};
 
   return (
     <Form {...form}>

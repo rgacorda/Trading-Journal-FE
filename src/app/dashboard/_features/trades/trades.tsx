@@ -19,7 +19,7 @@ export default function TradeDashboard() {
 
   useEffect(() => {
     setFilter(undefined);
-  }, []);
+  }, [setFilter]);
 
   const filteredTrades = React.useMemo(() => {
     if (!trades) return [];

@@ -5,25 +5,25 @@ const Statistics = () => {
   const stats = [
     {
       icon: Users,
-      value: '50,000+',
+      value: '100+',
       label: 'Active Traders',
       description: 'Professional traders trust Trade2Learn'
     },
     {
       icon: BarChart,
-      value: '2.5M+',
+      value: '250k+',
       label: 'Trades Analyzed',
       description: 'Trades tracked and analyzed monthly'
     },
     {
       icon: TrendingUp,
-      value: '34%',
+      value: '17%',
       label: 'Average Improvement',
       description: 'Win rate improvement in first 3 months'
     },
     {
       icon: DollarSign,
-      value: '$127M+',
+      value: '$1.2M+',
       label: 'Portfolio Value',
       description: 'Total portfolio value managed'
     }
@@ -37,7 +37,7 @@ const Statistics = () => {
             Trusted by Traders Worldwide
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Join thousands of traders who have improved their performance using Trade2Learn's advanced analytics and journaling tools.
+            Join thousands of traders who have improved their performance using Trade2Learn&apos;s advanced analytics and journaling tools.
           </p>
         </div>
 

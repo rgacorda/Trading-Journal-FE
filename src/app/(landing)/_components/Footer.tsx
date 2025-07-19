@@ -1,20 +1,20 @@
 import React from 'react';
-import { TrendingUp, Mail, Phone, MapPin, Twitter, Facebook, Linkedin, Github } from 'lucide-react';
+import { TrendingUp} from 'lucide-react';
 
 const Footer = () => {
-  const footerLinks = {
-    Product: ['Features', 'Pricing', 'API', 'Integrations', 'Changelog'],
-    Company: ['About Us', 'Careers', 'Press', 'Blog', 'Partners'],
-    Resources: ['Documentation', 'Help Center', 'Community', 'Webinars', 'Trading Guides'],
-    Legal: ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'GDPR', 'Security']
-  };
+  // const footerLinks = {
+  //   Product: ['Features', 'Pricing', 'API', 'Integrations', 'Changelog'],
+  //   Company: ['About Us', 'Careers', 'Press', 'Blog', 'Partners'],
+  //   Resources: ['Documentation', 'Help Center', 'Community', 'Webinars', 'Trading Guides'],
+  //   Legal: ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'GDPR', 'Security']
+  // };
 
-  const socialLinks = [
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: Github, href: '#', label: 'GitHub' }
-  ];
+  // const socialLinks = [
+  //   { icon: Twitter, href: '#', label: 'Twitter' },
+  //   { icon: Facebook, href: '#', label: 'Facebook' },
+  //   { icon: Linkedin, href: '#', label: 'LinkedIn' },
+  //   { icon: Github, href: '#', label: 'GitHub' }
+  // ];
 
   return (
     <footer className="bg-gray-900 text-white">

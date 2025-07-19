@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Camera, Upload, Save, Edit3, User } from "lucide-react";
+import { Save, Edit3, User } from "lucide-react";
 
 export function ProfileInfo() {
-  const [profileImage, setProfileImage] = useState("https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg");
+  // const [profileImage, setProfileImage] = useState("https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg");
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "Jessica",
@@ -16,16 +15,16 @@ export function ProfileInfo() {
     email: "jessica.smith@example.com"
   });
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setProfileImage(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       setProfileImage(e.target?.result as string);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const handleSave = () => {
     // Simulate API call

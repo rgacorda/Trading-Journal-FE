@@ -26,14 +26,12 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { IconPlus } from "@tabler/icons-react";
-import { PlatformInput } from "../../import/platform_input";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
 import { createAccount } from "@/actions/accounts/account";
 import { mutate } from "swr";
-import { on } from "events";
+import { AxiosError } from "axios";
 
 const formSchema = z.object({
   // platform: z.string().nonempty("Platform is required"),
@@ -71,7 +69,7 @@ export default function AddAccountForm({
           <DialogHeader>
             <DialogTitle>Add new Account</DialogTitle>
             <DialogDescription>
-              Add your new trading account here. Click add when you're done.
+              Add your new trading account here. Click add when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
           <ProfileForm onOpenChange={onOpenChange} />
@@ -92,7 +90,7 @@ export default function AddAccountForm({
           <DrawerHeader className="text-left">
             <DrawerTitle>Add new Account</DrawerTitle>
             <DrawerDescription>
-              Add your new trading account here. Click add when you're done.
+              Add your new trading account here. Click add when you&apos;re done.
             </DrawerDescription>
           </DrawerHeader>
           <ProfileForm className="px-4" onOpenChange={onOpenChange}/>
@@ -131,20 +129,23 @@ function ProfileForm({
   //   setValue("platform", platformValue);
   // }, [platformValue, setValue]);
 
-  const onSubmit = async (values: FormValues) => {
-    try {
-      await createAccount({
-        // platform: values.platform,
-        name: values.account_name,
-        balance: values.account_value
-      });
-      mutate("/account/");
-      toast.success("Account created successfully.");
-      onOpenChange(false);
-    } catch (err : any) {
-      toast.error(err.message)
-    };
-  };
+ const onSubmit = async (values: FormValues) => {
+  try {
+    await createAccount({
+      name: values.account_name,
+      balance: values.account_value,
+    });
+
+    mutate("/account/");
+    toast.success("Account created successfully.");
+    onOpenChange(false);
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    const errorMessage = error.response?.data?.message || "Account creation failed. Please try again.";
+    console.error("Account creation error:", errorMessage);
+    toast.error(errorMessage);
+  }
+};
 
   return (
     <FormProvider {...methods}>

@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 import useSWR from "swr";
 import { columns } from "./table/columns";
 import { DataTable } from "./table/data-table";
@@ -8,7 +8,7 @@ import React from "react";
 import { Account } from "@/actions/accounts/account";
 
 export default function AccountDashboard() {
-  const { data, error, isLoading, mutate } = useSWR<Account[]>(
+  const { data, error } = useSWR<Account[]>(
     "/account/",
     fetcher
   );

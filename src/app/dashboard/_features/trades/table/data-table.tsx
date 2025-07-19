@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/table";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { IconPlus } from "@tabler/icons-react";
 import { Trash } from "lucide-react";
 import {
   Select,
@@ -38,6 +37,7 @@ import { toast } from "sonner";
 import { Account } from "@/actions/accounts/account";
 import { fetcher } from "@/lib/fetcher";
 import { useTradeUIStore } from "@/stores/trade-ui-store";
+import { AxiosError } from "axios";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -124,7 +124,9 @@ export function DataTable<TData, TValue>({
                 mutate("/trade/");
                 toast.success("Trades deleted successfully.");
               } catch (error) {
-                toast.error("Failed to delete trades.");
+                const axiosError = error as AxiosError;
+                const message = axiosError.message || "Failed to delete trades.";
+                toast.error(message);
               }
             }}
           >

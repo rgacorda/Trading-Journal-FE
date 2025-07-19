@@ -6,7 +6,6 @@ import Header from "./_components/Header";
 import Hero from "./_components/Hero";
 import Pricing from "./_components/Pricing";
 import Statistics from "./_components/Statistics";
-import Testimonials from "./_components/Testimonials";
 
 
 function Home() {
@@ -17,7 +16,7 @@ function Home() {
       <About />
       <Features />
       <Statistics />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Pricing />
       <CTA />
       <Footer />

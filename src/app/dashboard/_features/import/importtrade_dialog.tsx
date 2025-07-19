@@ -28,7 +28,7 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
   const [file, setFile] = useState<File | null>(null);
   const [platform, setPlatform] = useState<string>("");
   const [account, setAccount] = useState<string>("");
-   const [openCalendat, setOpenCalendar] = useState(false)
+  // const [openCalendar, setOpenCalendar] = useState(false)
   const [date, setDate] = useState<Date | undefined>(undefined)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,7 +97,7 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
                       captionLayout="dropdown"
                       onSelect={(date) => {
                         setDate(date);
-                        setOpenCalendar(false);
+                        // setOpenCalendar(false);
                       }}
                     />
                   </PopoverContent>

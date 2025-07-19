@@ -18,7 +18,7 @@ export default function PlansDashboard() {
   const [openAddForm, setOpenAddForm] = React.useState<boolean>(false);
   const [searchQuery, setSearchQuery] = React.useState<string>("");
 
-  const { data, error, isLoading, mutate } = useSWR<Plan[]>("/plan/", fetcher);
+  const { data } = useSWR<Plan[]>("/plan/", fetcher);
 
   // 🔍 Filter plans based on search input
   const filteredPlans = React.useMemo(() => {

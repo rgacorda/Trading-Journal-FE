@@ -29,7 +29,7 @@ function calculateStats(trades: Trade[] | undefined): {
     realized.reduce((sum, r) => sum + Math.pow(r - averageTrade, 2), 0) /
       (trades.length - 1 || 1)
   );
-  const scratchTrades = trades.filter((t) => t.realized === 0);
+  // const scratchTrades = trades.filter((t) => t.realized === 0);
   const largestGain = Math.max(...realized);
   const largestLoss = Math.min(...realized);
   const perShare = trades.map((t) =>
@@ -142,7 +142,7 @@ function calculateStats(trades: Trade[] | undefined): {
 export default function StatTable() {
   const {
     data: trades,
-    error,
+    // error,
     isLoading,
   } = useSWR<Trade[]>("/trade/", fetcher);
 
@@ -172,7 +172,7 @@ export default function StatTable() {
       <div className="flex-1">
         <h2 className="text-lg font-semibold">Full Statistics</h2>
         <p className="text-muted-foreground text-sm">
-          Full statistics show a complete picture of your trading system's
+          Full statistics show a complete picture of your trading system&apos;s
           performance. All the metrics are calculated based on the data from
           your connected accounts. The metrics are grouped into two sections:
           the left section shows general statistics, and the right section shows

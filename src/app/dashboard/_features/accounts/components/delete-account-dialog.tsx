@@ -59,7 +59,7 @@ export default function DeleteAccountDialog() {
         <DialogHeader>
           <DialogTitle>Delete Account</DialogTitle>
           <DialogDescription>
-            Confirm the deletion of your account. Click delete when you're sure.
+            Confirm the deletion of your account. Click delete when you&apos;re sure.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
