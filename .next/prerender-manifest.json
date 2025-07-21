@@ -1,6 +1,30 @@
 {
   "version": 4,
   "routes": {
+    "/register": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/register",
+      "dataRoute": "/register.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/sample": {
       "experimentalBypassFor": [
         {
@@ -78,30 +102,6 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/register": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/register",
-      "dataRoute": "/register.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
     "/login": {
       "experimentalBypassFor": [
         {
@@ -130,8 +130,8 @@
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "3c20756cfbd34e91e8f239f4015ba004",
-    "previewModeSigningKey": "bec02aaec0abbf5c122fe3cb3bb91a9c91bd877fadfa7257f817dce501cd0f63",
-    "previewModeEncryptionKey": "9e64ee76150dbeacab3808e863b1c8a6c6bc80fd420c177a0d0595b84e7bd974"
+    "previewModeId": "658803b2a90aede358a45e2aa2a60e0c",
+    "previewModeSigningKey": "5f0ee7c5831388941441d7cdce52138670c3def6cd4b7db2e97ece457f0f264b",
+    "previewModeEncryptionKey": "6cd5778d48ffd3032323289e5c6b7914bfb6c78cd9080655bc4953ad1f1df4a6"
   }
 }
