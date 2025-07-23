@@ -24,12 +24,11 @@ export default function TradeDashboard() {
   const filteredTrades = React.useMemo(() => {
     if (!trades) return [];
     if (!filter) return trades;
-
     return trades.filter(
       (trade) =>
         trade.side === filter ||
         trade.planId === filter ||
-        trade.account_id === filter
+        trade.accountId === filter
     );
   }, [trades, filter]);
 

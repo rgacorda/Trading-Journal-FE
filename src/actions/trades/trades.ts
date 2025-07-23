@@ -18,7 +18,7 @@ export type Trade = {
   security: string;
   broker: string;
   planId: string;
-  account_id: string;
+  accountId: string;
 };
 
 // ✅ Central error handler to avoid code duplication
