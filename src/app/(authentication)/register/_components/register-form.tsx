@@ -17,6 +17,8 @@ import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
+import React from "react";
+import Link from "next/link";
 
 const formSchema = z.object({
   firstname: z.string().min(2, {
@@ -138,25 +140,48 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
               </FormControl>
               <FormMessage />
             </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => {
+            const [show, setShow] = React.useState(false);
+            return (
+              <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="" {...field} />
+                <div className="relative">
+                <Input
+                  type={show ? "text" : "password"}
+                  placeholder="password"
+                  {...field}
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground"
+                  onClick={() => setShow((s) => !s)}
+                >
+                  {show ? "Hide" : "Show"}
+                </button>
+                </div>
               </FormControl>
               <FormMessage />
-            </FormItem>
-          )}
-        />
+              </FormItem>
+            );
+            }}
+          />
         <Button type="submit" className="w-full">
            Register
          </Button>
       </form>
+      <div className="text-center text-sm py-2">
+          Already have an account?{" "}
+          <Link href="/login" className="underline underline-offset-4">
+            Sign in
+          </Link>
+        </div>
     </Form>
     //   <div className="flex flex-col items-center gap-2 text-center">
     //     <h1 className="text-2xl font-bold">Register your account</h1>

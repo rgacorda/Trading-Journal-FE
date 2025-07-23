@@ -72,11 +72,11 @@ const Header = () => {
                 Contact
               </a> */}
               <div className="flex flex-col space-y-2 pt-4 border-t border-gray-100">
-                <button className="text-left text-gray-600 hover:text-gray-900 transition-colors duration-200">
+                <Link href="/login" className="text-left text-gray-600 hover:text-gray-900 transition-colors duration-200">
                   Sign In
-                </button>
+                </Link>
                 <button className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors duration-200 text-left">
-                  Start Free Trial
+                  Start Trial (Coming Soon)
                 </button>
               </div>
             </nav>

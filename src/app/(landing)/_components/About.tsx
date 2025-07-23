@@ -75,7 +75,7 @@ const About = () => {
   return (
     <section
       id="about"
-      className="container mx-auto flex flex-col items-center space-y-16 py-8 md:py-12 lg:py-24"
+      className="container mx-auto flex flex-col items-center space-y-16 py-8 px-4 md:py-12 lg:py-24"
     >
       {/* Hero Section */}
       <div className="mx-auto flex max-w-[980px] flex-col items-center gap-4 text-center">

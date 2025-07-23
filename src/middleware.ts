@@ -20,9 +20,9 @@ export function middleware(req: NextRequest) {
       return NextResponse.next()
     }
     // 👇 Append ?expired=1 to login URL
-    const loginUrl = new URL('/login', req.url)
-    loginUrl.searchParams.set('expired', '1')
-    return NextResponse.redirect(loginUrl)
+    // const loginUrl = new URL('/login', req.url)
+    // loginUrl.searchParams.set('expired', '1')
+    // return NextResponse.redirect(loginUrl)
   }
 }
 

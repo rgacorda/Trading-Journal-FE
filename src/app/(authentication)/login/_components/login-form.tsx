@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { AxiosError } from "axios";
+import React from "react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -108,29 +109,46 @@ export function LoginForm({
               )}
             />
           </div>
-          <div className="grid gap-2">
+            <div className="grid gap-2">
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
               <a
-                href="#"
-                className="ml-auto text-sm underline-offset-4 hover:underline"
+              href="#"
+              className="ml-auto text-sm underline-offset-4 hover:underline"
               >
-                Forgot your password?
+              Forgot your password?
               </a>
             </div>
             <FormField
               control={form.control}
               name="password"
-              render={({ field }) => (
+              render={({ field }) => {
+              const [show, setShow] = React.useState(false);
+              return (
                 <FormItem>
-                  <FormControl>
-                    <Input placeholder="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
+                <FormControl>
+                  <div className="relative">
+                  <Input
+                    placeholder="password"
+                    type={show ? "text" : "password"}
+                    {...field}
+                  />
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground"
+                    onClick={() => setShow((s) => !s)}
+                  >
+                    {show ? "Hide" : "Show"}
+                  </button>
+                  </div>
+                </FormControl>
+                <FormMessage />
                 </FormItem>
-              )}
+              );
+              }}
             />
-          </div>
+            </div>
           <Button type="submit" className="w-full">
             Login
           </Button>
