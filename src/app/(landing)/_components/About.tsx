@@ -50,26 +50,26 @@ const About = () => {
       title: "The Spark",
       description:
         "Frustrated with the lack of intuitive journaling tools for active traders, I started sketching out ideas on paper.",
-      date: "2023",
+      date: "2024",
     },
     {
       title: "First Line of Code",
       description:
         "Using my skills in modern web development, I built the first prototype over nights and weekends.",
-      date: "Early 2024",
+      date: "Early 2025",
     },
     {
       title: "Private Beta",
       description:
         "Invited a small group of trader friends to test the platform. Their feedback was invaluable.",
-      date: "Mid 2024",
+      date: "Mid 2025",
     },
-    {
-      title: "Public Launch",
-      description:
-        "Trade2Learn goes live! Ready to empower traders everywhere with data and insights.",
-      date: "2025",
-    },
+    // {
+    //   title: "Public Launch",
+    //   description:
+    //     "Trade2Learn goes live! Ready to empower traders everywhere with data and insights.",
+    //   date: "2025",
+    // },
   ];
 
   return (

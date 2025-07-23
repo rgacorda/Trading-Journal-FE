@@ -83,6 +83,10 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
   }
 };
 
+const temporaySubmit = () => {
+  toast.error("Registration is not yet available.");
+};
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className={cn("flex flex-col gap-3", className)} {...props}>
@@ -173,9 +177,9 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
             );
             }}
           />
-        <Button type="submit" className="w-full">
-           Register
-         </Button>
+        <Button type="button" className="w-full" onClick={temporaySubmit}>
+          Register
+        </Button>
       </form>
       <div className="text-center text-sm py-2">
           Already have an account?{" "}
