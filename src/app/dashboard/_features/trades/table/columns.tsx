@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel, SelectItem } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
+import { format, subDays } from "date-fns";
 import { toast } from "sonner";
 import { mutate } from "swr";
 import useSWR from "swr";
@@ -117,9 +117,10 @@ export const columns: ColumnDef<Trade>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const value = row.getValue("date") as string;
-      return <div>{format(new Date(value), "MMM dd, yyyy")}</div>;
-    },
+  const value = row.getValue("date") as string;
+  const adjusted = subDays(new Date(value), 1);
+  return <div>{format(adjusted, "MMM dd, yyyy")}</div>;
+},
     sortingFn: (rowA, rowB, columnId) => {
       const a = new Date(rowA.getValue(columnId)).getTime();
       const b = new Date(rowB.getValue(columnId)).getTime();

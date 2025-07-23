@@ -30,7 +30,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/sample": {
+    "/": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -43,8 +43,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/sample",
-      "dataRoute": "/sample.rsc",
+      "srcRoute": "/",
+      "dataRoute": "/index.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -78,30 +78,6 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/",
-      "dataRoute": "/index.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
     "/register": {
       "experimentalBypassFor": [
         {
@@ -125,13 +101,37 @@
         "x-next-revalidated-tags",
         "x-next-revalidate-tag-token"
       ]
+    },
+    "/sample": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/sample",
+      "dataRoute": "/sample.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
     }
   },
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "b2ccb5be1367994daf569ad2792c08d4",
-    "previewModeSigningKey": "1f7a8f12e00102f164ac0b5ef9c71560033a0726ead081add281934497b74612",
-    "previewModeEncryptionKey": "3693995f0d059c10364447f844815a73a6937ad00979964fa1b12cf1b8f2e55f"
+    "previewModeId": "186d79aa5073d6affe7c6e655a325a5b",
+    "previewModeSigningKey": "27329933b9fb833245d9d238d59676f797660e699ba8c3701a33d1c5c0ab0f5b",
+    "previewModeEncryptionKey": "e4fa06bd242daf4a2bb9e772f0e2bb5860875944cf1ab584e1fa6ec64aaa2be7"
   }
 }
