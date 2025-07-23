@@ -53,6 +53,8 @@ export function RegisterForm({
 
   const router = useRouter();
 
+  const [show, setShow] = React.useState<boolean>(false);
+
 const onSubmit = async (values: z.infer<typeof formSchema>) => {
   try {
     await Register(values);
@@ -146,7 +148,6 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
             control={form.control}
             name="password"
             render={({ field }) => {
-            const [show, setShow] = React.useState(false);
             return (
               <FormItem>
               <FormLabel>Password</FormLabel>

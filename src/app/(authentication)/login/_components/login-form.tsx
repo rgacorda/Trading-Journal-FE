@@ -43,6 +43,8 @@ export function LoginForm({
 
   const router = useRouter();
 
+  const [show, setShow] = React.useState<boolean>(false);
+
   // const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
   //   try {
@@ -123,7 +125,6 @@ export function LoginForm({
               control={form.control}
               name="password"
               render={({ field }) => {
-              const [show, setShow] = React.useState(false);
               return (
                 <FormItem>
                 <FormControl>
