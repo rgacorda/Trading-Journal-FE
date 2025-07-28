@@ -9,6 +9,8 @@ import { useDashboardStore } from "@/stores/dashboard-ui-store";
 import PlansDashboard from "../_features/plans/plans";
 import AnalyticsDashboard from "../_features/analytics/analytics";
 import UserProfile from "../_features/user/userProfile";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 export default function SiteDashboardPage({
   params,
@@ -22,7 +24,16 @@ export default function SiteDashboardPage({
     setDashboard({ title: site.charAt(0).toUpperCase() + site.slice(1) });
   }, [site, setDashboard]);
 
-  switch (site) { 
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = Cookies.get("refreshToken");
+    if (!token) {
+      router.replace("/login?expired=1");
+    }
+  }, [router]);
+
+  switch (site) {
     case "main":
       return <MainDashboard />;
     case "analytics":

@@ -5,6 +5,6 @@
   "/(landing)/page": "/",
   "/sample/page": "/sample",
   "/(authentication)/register/page": "/register",
-  "/dashboard/[site]/(plans)/create/page": "/dashboard/[site]/create",
-  "/dashboard/[site]/page": "/dashboard/[site]"
+  "/dashboard/[site]/page": "/dashboard/[site]",
+  "/dashboard/[site]/(plans)/create/page": "/dashboard/[site]/create"
 }
