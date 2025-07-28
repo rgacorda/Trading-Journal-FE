@@ -2,9 +2,12 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import useAuthGuard from "@/hooks/useAuthGuard";
 
 
 export default function DashboardLayout({children}: {children: React.ReactNode}) {
+
+  useAuthGuard();
 
   return (
     <SidebarProvider

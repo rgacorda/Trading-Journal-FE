@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -9,6 +10,7 @@ api.interceptors.response.use(
   res => res,
   async error => {
     const originalRequest = error.config;
+    const router = useRouter();
 
     // Check if token expired
     if (
@@ -25,7 +27,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         console.error('Refresh token failed', refreshError);
-        // Optionally redirect to login or handle logout
+        router.replace('/login?expired=1');
       }
     }
 
