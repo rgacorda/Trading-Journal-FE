@@ -57,3 +57,12 @@ export async function Logout() {
     handleAxiosError(error, "Logout failed");
   }
 }
+
+export async function CheckAuth() {
+  try {
+    const res = await api.get("/auth/check-auth", { withCredentials: true });
+    return res.data;
+  } catch (error: unknown) {
+    handleAxiosError(error, "Authentication check failed");
+  }
+}
