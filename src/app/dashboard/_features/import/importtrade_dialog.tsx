@@ -14,8 +14,12 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { ImportTradesService } from "@/actions/trades/import_trades";
 import { mutate } from "swr";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import {  ChevronDownIcon } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ChevronDownIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { AccountInput } from "./account_input";
 
@@ -29,7 +33,7 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
   const [platform, setPlatform] = useState<string>("");
   const [account, setAccount] = useState<string>("");
   // const [openCalendar, setOpenCalendar] = useState(false)
-  const [date, setDate] = useState<Date | undefined>(undefined)
+  const [date, setDate] = useState<Date | undefined>(undefined);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -53,8 +57,31 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
       toast.error("Incomplete Upload Details.");
       return;
     } else {
-      // console.log(platform, file)
-      await ImportTradesService.importTrades({ platform, file, account, date });
+      try {
+        await ImportTradesService.importTrades({
+          platform,
+          file,
+          account,
+          date,
+        });
+      } catch (error: unknown) {
+        if (
+          typeof error === "object" &&
+          error !== null &&
+          "status" in error &&
+          (error as { status?: number }).status === 403
+        ) {
+          toast("Subscribe to use this feature.", {
+            action: {
+              label: "Subscribe",
+              onClick: () => console.log("subscribe"),
+            },
+          });
+        } else {
+          toast.error("Failed to upload file.");
+        }
+        return;
+      }
       toast.success("File uploaded successfully.");
       mutate("/trade/");
       setFile(null);
@@ -76,32 +103,32 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
               Date
             </Label>
             <div className="col-span-3">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      id="date-picker"
-                      className="w-full justify-between font-normal"
-                    >
-                      {date ? date.toLocaleDateString() : "Select date"}
-                      <ChevronDownIcon />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    className="w-auto overflow-hidden p-0"
-                    align="start"
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    id="date-picker"
+                    className="w-full justify-between font-normal"
                   >
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      captionLayout="dropdown"
-                      onSelect={(date) => {
-                        setDate(date);
-                        // setOpenCalendar(false);
-                      }}
-                    />
-                  </PopoverContent>
-                </Popover>
+                    {date ? date.toLocaleDateString() : "Select date"}
+                    <ChevronDownIcon />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-auto overflow-hidden p-0"
+                  align="start"
+                >
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    captionLayout="dropdown"
+                    onSelect={(date) => {
+                      setDate(date);
+                      // setOpenCalendar(false);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">

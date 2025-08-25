@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import axios from "axios";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -7,27 +6,28 @@ const api = axios.create({
 });
 
 api.interceptors.response.use(
-  res => res,
-  async error => {
+  (res) => res,
+  async (error) => {
     const originalRequest = error.config;
-    const router = useRouter();
 
     // Check if token expired
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url.includes('/auth/refresh')
+      !originalRequest.url.includes("/auth/refresh")
     ) {
       originalRequest._retry = true;
 
       try {
         // Try refreshing the token
-        await api.post('/auth/refresh');
+        await api.post("/auth/refresh");
         // Retry the original request
         return api(originalRequest);
       } catch (refreshError) {
-        console.error('Refresh token failed', refreshError);
-        router.replace('/login?expired=1');
+        console.error("Refresh token failed", refreshError);
+        if (typeof window !== "undefined") {
+          window.location.replace("/login?expired=1");
+        }
       }
     }
 

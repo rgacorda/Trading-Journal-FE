@@ -62,7 +62,9 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
     return Array.from(map.entries()).map(([date, value]) => ({
       id: date,
       date,
-      title: `${value.count} trade${value.count > 1 ? "s" : ""} | $${value.realized.toFixed(2)}`,
+      title: `${value.count} trade${
+        value.count > 1 ? "s" : ""
+      } | $${value.realized.toFixed(2)}`,
     }));
   }, [trades]);
 
@@ -83,11 +85,12 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
         ? parseFloat(daySummary.title.split("|")[1].replace("$", ""))
         : null;
 
-      const cellBg = realizedAmount !== null
-        ? realizedAmount >= 0
-          ? "bg-green-50 text-green-900"
-          : "bg-red-50 text-red-900"
-        : isCurrentMonth
+      const cellBg =
+        realizedAmount !== null
+          ? realizedAmount >= 0
+            ? "bg-green-50 text-green-900"
+            : "bg-red-50 text-red-900"
+          : isCurrentMonth
           ? "bg-white"
           : "bg-gray-100 text-gray-400";
 
@@ -111,9 +114,10 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
                 key={event.id}
                 className={`
                   text-[11px] font-medium text-center px-2 py-[2px] rounded-md 
-                  ${realizedAmount! >= 0
-                    ? "bg-green-200 text-green-900"
-                    : "bg-red-200 text-red-900"
+                  ${
+                    realizedAmount! >= 0
+                      ? "bg-green-200 text-green-900"
+                      : "bg-red-200 text-red-900"
                   }
                 `}
               >
@@ -144,31 +148,41 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
             <CardDescription>Daily Trades and PnL View</CardDescription>
           </div>
           <div className="flex justify-between items-center mb-4 lg:w-1/3">
-            <Button onClick={prevMonth} variant="outline" className="px-2 py-1 text-sm mx-1">
+            <Button
+              onClick={prevMonth}
+              variant="outline"
+              className="px-2 py-1 text-sm mx-1"
+            >
               ← Prev
             </Button>
             <h2 className="text-xl font-bold mx-2 px-5">
               {format(currentMonth, "MMMM yyyy")}
             </h2>
-            <Button onClick={nextMonth} variant="outline" className="px-2 py-1 rounded text-sm mx-1">
+            <Button
+              onClick={nextMonth}
+              variant="outline"
+              className="px-2 py-1 rounded text-sm mx-1"
+            >
               Next →
             </Button>
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="w-full max-w-6xl mx-auto">
+        <div className="overflow-x-auto">
           {/* Weekdays */}
-          <div className="grid grid-cols-7 bg-gray-200 text-center text-xs font-semibold rounded-t-md overflow-hidden">
-            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-              <div key={d} className="py-2 border">
-                {d}
-              </div>
-            ))}
-          </div>
+          <div className="min-w-[1000px] w-fit mx-auto">
+            <div className="grid grid-cols-7 bg-gray-200 text-center text-xs font-semibold rounded-t-md overflow-hidden">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+                <div key={d} className="py-2 border">
+                  {d}
+                </div>
+              ))}
+            </div>
 
-          {/* Calendar Body */}
-          <div className="divide-y space-y-1">{rows}</div>
+            {/* Calendar Body */}
+            <div className="divide-y space-y-1">{rows}</div>
+          </div>
         </div>
       </CardContent>
     </Card>
