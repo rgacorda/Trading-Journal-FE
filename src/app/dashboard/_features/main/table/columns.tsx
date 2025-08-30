@@ -9,14 +9,13 @@ import { ArrowUpDown, TrendingDown, TrendingUp } from "lucide-react";
 import React from "react";
 import useSWR from "swr";
 
-// ✅ LiveValueCell component for using hooks safely
-const LiveValueCell: React.FC<{ balance: number }> = ({ balance }) => {
+const LiveValueCell: React.FC<{ balance: number, account: Account }> = ({ balance, account }) => {
   const { data: trades } = useSWR<Trade[]>("/trade/", fetcher);
 
   const totalRealized =
-    trades?.reduce((sum, trade) => {
-      return sum + (Number(trade.realized) || 0);
-    }, 0) || 0;
+    trades
+      ?.filter(trade => trade.accountId === account.id)
+      .reduce((sum, trade) => sum + (Number(trade.realized) || 0), 0) || 0;
 
   const combined = balance + totalRealized;
 
@@ -100,7 +99,8 @@ export const columns: ColumnDef<Account>[] = [
     // ✅ use React component for hook-safe usage
     cell: ({ row }) => {
       const balance = parseFloat(row.getValue("balance")) || 0;
-      return <LiveValueCell balance={balance} />;
+      const account = row.original;
+      return <LiveValueCell balance={balance} account={account} />;
     },
   },
 ];

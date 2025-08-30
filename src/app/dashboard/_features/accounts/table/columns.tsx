@@ -1,6 +1,7 @@
 "use client";
 
-import { Account } from "@/actions/accounts/account";
+import { Account, updateAccount } from "@/actions/accounts/account";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,8 +13,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAccountUIStore } from "@/stores/account-ui-store";
 import { ColumnDef, Row } from "@tanstack/react-table";
+import { ca } from "date-fns/locale";
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import React from "react";
+import { toast } from "sonner";
+import { mutate } from "swr";
 
 // ✅ Correct type: row is Row<Account>
 const ActionsCell: React.FC<{ row: Row<Account> }> = ({ row }) => {
@@ -25,12 +29,24 @@ const ActionsCell: React.FC<{ row: Row<Account> }> = ({ row }) => {
 
   const handleEdit = () => {
     setEditOpen(true);
-    setSelectedAccountId(account.id);
+    setSelectedAccountId(account.id || null);
   };
 
   const handleDelete = () => {
     setDeleteOpen(true);
-    setSelectedAccountId(account.id);
+    setSelectedAccountId(account.id || null);
+  };
+
+  const handleToggleAnalytics = async () => {
+    try {
+      await updateAccount(account.id || null, {
+        isAnalyticsIncluded: !account.isAnalyticsIncluded,
+      });
+      mutate("/account/");
+      toast.success(`Account ${account.isAnalyticsIncluded ? "excluded from" : "included in"} analytics.`);
+    } catch (error: unknown) {
+      toast.error("Failed to update analytics status.");
+    }
   };
 
   return (
@@ -43,8 +59,11 @@ const ActionsCell: React.FC<{ row: Row<Account> }> = ({ row }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem onClick={handleEdit}>Edit Account</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleToggleAnalytics}>
+          Toggle Analytics
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleEdit}>Edit Account</DropdownMenuItem>
         <DropdownMenuItem className="text-red-500" onClick={handleDelete}>
           Delete Account
         </DropdownMenuItem>
@@ -88,7 +107,22 @@ export const columns: ColumnDef<Account>[] = [
     },
   },
   {
+    accessorKey: "isAnalyticsIncluded",
+    header: "Analytics",
+    cell: ({ row }) => {
+      const isIncluded = row.getValue("isAnalyticsIncluded");
+      return (
+        <Badge
+          variant={isIncluded ? "outline" : "destructive"}
+          className="text-xs mr-1"
+        >
+          {isIncluded ? "Included" : "Excluded"}
+        </Badge>
+      );
+    },
+  },
+  {
     id: "actions",
-    cell: ({ row }) => <ActionsCell row={row} />, // ✅ `row` is of type Row<Account>
+    cell: ({ row }) => <ActionsCell row={row} />,
   },
 ];

@@ -22,10 +22,11 @@ export const getAccounts = async () => {
 };
 
 export type Account = {
-  name: string;
-  balance: number;
-  userId: string;
-  id: string;
+  name?: string;
+  balance?: number;
+  userId?: string;
+  id?: string;
+  isAnalyticsIncluded?: boolean;
 };
 
 type createAccount = {
@@ -52,7 +53,7 @@ export const getAccountById = async (id: string | null) => {
   }
 };
 
-export const updateAccount = async (id: string | null, data: createAccount) => {
+export const updateAccount = async (id: string | null, data: Account) => {
   if (!id) return;
   try {
     const res = await api.put(`/account/${id}`, data);
