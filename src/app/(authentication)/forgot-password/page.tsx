@@ -1,4 +1,5 @@
-import { ResetForm } from "./_components/forgotForm";
+import { ResetForm } from "./components/forgotForm";
+
 
 export default function Page() {
   return (

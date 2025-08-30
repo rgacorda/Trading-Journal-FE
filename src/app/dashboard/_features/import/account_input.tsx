@@ -32,7 +32,7 @@ export function AccountInput({value, setValue}: AccountInputProps) {
         <SelectGroup>
           <SelectLabel>Platforms</SelectLabel>
           {data?.map(({ name, id }) => (
-            <SelectItem key={id} value={id}>
+            <SelectItem key={id} value={id || ""}>
               {name}
             </SelectItem>
           ))}

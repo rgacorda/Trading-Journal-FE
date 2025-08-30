@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAccountUIStore } from "@/stores/account-ui-store";
 import { ColumnDef, Row } from "@tanstack/react-table";
-import { ca } from "date-fns/locale";
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
@@ -44,7 +43,7 @@ const ActionsCell: React.FC<{ row: Row<Account> }> = ({ row }) => {
       });
       mutate("/account/");
       toast.success(`Account ${account.isAnalyticsIncluded ? "excluded from" : "included in"} analytics.`);
-    } catch (error: unknown) {
+    } catch {
       toast.error("Failed to update analytics status.");
     }
   };

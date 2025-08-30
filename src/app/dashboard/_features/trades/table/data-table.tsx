@@ -80,7 +80,7 @@ export function DataTable<TData, TValue>({
               <SelectGroup>
                 <SelectLabel>Accounts</SelectLabel>
                 {accounts?.map(({ name, id }) => (
-                  <SelectItem key={id} value={id}>
+                  <SelectItem key={id} value={id || ""}>
                     {name}
                   </SelectItem>
                 ))}
@@ -88,7 +88,7 @@ export function DataTable<TData, TValue>({
               <SelectGroup>
                 <SelectLabel>Plans</SelectLabel>
                 {plans?.map(({ name, id }) => (
-                  <SelectItem key={id} value={id}>
+                  <SelectItem key={id} value={id || ""}>
                     {name}
                   </SelectItem>
                 ))}
