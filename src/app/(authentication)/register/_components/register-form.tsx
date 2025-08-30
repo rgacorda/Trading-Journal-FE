@@ -83,9 +83,6 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
   }
 };
 
-const temporaySubmit = () => {
-  toast.error("Registration is not yet available.");
-};
 
   return (
     <Form {...form}>
@@ -177,7 +174,7 @@ const temporaySubmit = () => {
             );
             }}
           />
-        <Button type="button" className="w-full" onClick={temporaySubmit}>
+        <Button type="submit" className="w-full" >
           Register
         </Button>
       </form>
