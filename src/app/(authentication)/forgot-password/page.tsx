@@ -1,11 +1,11 @@
-import { ResetForm } from "./components/forgotForm";
+import { ForgotForm } from "./components/forgotForm";
 
 
 export default function Page() {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
-        <ResetForm />
+        <ForgotForm />
       </div>
     </div>
   )

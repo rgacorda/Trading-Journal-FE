@@ -58,3 +58,12 @@ export async function Logout() {
   }
 }
 
+export async function ForgotPassword(email: string) {
+  try {
+    const res = await api.post("/auth/forgot-password", { email });
+    return res.data;
+  } catch (error: unknown) {
+    handleAxiosError(error, "Forgot password request failed");
+  }
+}
+
