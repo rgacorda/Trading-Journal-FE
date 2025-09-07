@@ -1,5 +1,7 @@
 {
-  "/(authentication)/verify-email/page": "app/(authentication)/verify-email/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/(authentication)/login/page": "app/(authentication)/login/page.js",
-  "/(landing)/page": "app/(landing)/page.js"
+  "/(authentication)/register/page": "app/(authentication)/register/page.js",
+  "/(authentication)/verify-email/page": "app/(authentication)/verify-email/page.js",
+  "/dashboard/[site]/page": "app/dashboard/[site]/page.js"
 }

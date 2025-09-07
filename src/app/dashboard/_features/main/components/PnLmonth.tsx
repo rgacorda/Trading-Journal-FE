@@ -22,6 +22,18 @@ import {
   isSameDay,
 } from "date-fns";
 import React, { useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export type Event = {
   id: string;
@@ -142,29 +154,55 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between space-y-1.5">
+        <div className="flex items-center justify-between w-full space-y-1.5">
           <div>
             <CardTitle>Month Calendar</CardTitle>
             <CardDescription>Daily Trades and PnL View</CardDescription>
           </div>
-          <div className="flex justify-between items-center mb-4 lg:w-1/3">
-            <Button
-              onClick={prevMonth}
-              variant="outline"
-              className="px-2 py-1 text-sm mx-1"
+          <div className="flex items-center gap-2 w-auto">
+            {/* Month Select */}
+            <Select
+              value={String(currentMonth.getMonth())}
+              onValueChange={(month) => {
+                setCurrentMonth(
+                  new Date(currentMonth.getFullYear(), Number(month), 1)
+                );
+              }}
             >
-              ← Prev
-            </Button>
-            <h2 className="text-xl font-bold mx-2 px-5">
-              {format(currentMonth, "MMMM yyyy")}
-            </h2>
-            <Button
-              onClick={nextMonth}
-              variant="outline"
-              className="px-2 py-1 rounded text-sm mx-1"
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="Month" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <SelectItem key={i} value={String(i)}>
+                    {format(new Date(2000, i, 1), "MMMM")}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {/* Year Select */}
+            <Select
+              value={String(currentMonth.getFullYear())}
+              onValueChange={(year) => {
+                setCurrentMonth(
+                  new Date(Number(year), currentMonth.getMonth(), 1)
+                );
+              }}
             >
-              Next →
-            </Button>
+              <SelectTrigger className="w-24">
+                <SelectValue placeholder="Year" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: 10 }).map((_, i) => {
+                  const y = new Date().getFullYear() - 5 + i;
+                  return (
+                    <SelectItem key={y} value={String(y)}>
+                      {y}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </CardHeader>

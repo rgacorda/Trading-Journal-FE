@@ -7,7 +7,7 @@ import { ProfileInfo } from "./components/ProfileInfo";
 function UserProfile() {
   return (
     <div>
-      <div className="px-4 py-8 max-w-4xl">
+      <div className="px-6 py-8 max-w-4xl">
         {/* Main Content */}
         <div className="space-y-8">
           <ProfileInfo />
