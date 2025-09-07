@@ -61,7 +61,8 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
     toast.success("Registered successfully");
     router.push("/login");
   } catch (err: unknown) {
-    let message = "Registration failed. Please try again.";
+    let message = (err as Error).message || "Registration failed";
+    
 
     if (
       typeof err === "object" &&
@@ -79,7 +80,6 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
     }
 
     toast.error(message);
-    console.error(err);
   }
 };
 

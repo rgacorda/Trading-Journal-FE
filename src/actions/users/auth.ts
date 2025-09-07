@@ -67,3 +67,12 @@ export async function ForgotPassword(email: string) {
   }
 }
 
+export async function VerifyEmail(token: string) {
+  try {
+    const res = await api.post("/auth/verify-email", { token });
+    return res.data;
+  } catch (error: unknown) {
+    handleAxiosError(error, "Email verification failed");
+  }
+}
+
