@@ -31,9 +31,16 @@ const formSchema = z.object({
   // phone: z.string().min(2, {
   //   message: "Phone number must be at least 2 characters.",
   // }),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
-  }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters." })
+    .regex(
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/,
+      {
+        message:
+          "Password must contain at least 1 capital letter, 1 number, and 1 symbol.",
+      }
+    ),
 });
 
 export function RegisterForm({
@@ -55,38 +62,36 @@ export function RegisterForm({
 
   const [show, setShow] = React.useState<boolean>(false);
 
-const onSubmit = async (values: z.infer<typeof formSchema>) => {
-  try {
-    await Register(values);
-    toast.success("Registered successfully");
-    router.push("/login");
-  } catch (err: unknown) {
-    let message = (err as Error).message || "Registration failed";
-    
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await Register(values);
+      toast.success("Registered successfully");
+      router.push("/login");
+    } catch (err: unknown) {
+      let message = (err as Error).message || "Registration failed";
 
-    if (
-      typeof err === "object" &&
-      err !== null &&
-      "isAxiosError" in err
-    ) {
-      const axiosErr = err as AxiosError<{ message?: string }>;
-      message = axiosErr.response?.data?.message || message;
+      if (typeof err === "object" && err !== null && "isAxiosError" in err) {
+        const axiosErr = err as AxiosError<{ message?: string }>;
+        message = axiosErr.response?.data?.message || message;
 
-      if (message === "Email already exists.") {
-        toast.error(message);
-        console.log(axiosErr);
-        return;
+        if (message === "Email already exists.") {
+          toast.error(message);
+          console.log(axiosErr);
+          return;
+        }
       }
+
+      toast.error(message);
     }
-
-    toast.error(message);
-  }
-};
-
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn("flex flex-col gap-3", className)} {...props}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn("flex flex-col gap-3", className)}
+        {...props}
+      >
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Register your account</h1>
           <p className="text-balance text-sm text-muted-foreground">
@@ -143,47 +148,47 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
               </FormControl>
               <FormMessage />
             </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => {
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => {
             return (
               <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <div className="relative">
-                <Input
-                  type={show ? "text" : "password"}
-                  placeholder="password"
-                  {...field}
-                />
-                <button
-                  type="button"
-                  tabIndex={-1}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground"
-                  onClick={() => setShow((s) => !s)}
-                >
-                  {show ? "Hide" : "Show"}
-                </button>
-                </div>
-              </FormControl>
-              <FormMessage />
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      type={show ? "text" : "password"}
+                      placeholder="password"
+                      {...field}
+                    />
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground"
+                      onClick={() => setShow((s) => !s)}
+                    >
+                      {show ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                </FormControl>
+                <FormMessage />
               </FormItem>
             );
-            }}
-          />
-        <Button type="submit" className="w-full" >
+          }}
+        />
+        <Button type="submit" className="w-full">
           Register
         </Button>
       </form>
       <div className="text-center text-sm py-2">
-          Already have an account?{" "}
-          <Link href="/login" className="underline underline-offset-4">
-            Sign in
-          </Link>
-        </div>
+        Already have an account?{" "}
+        <Link href="/login" className="underline underline-offset-4">
+          Sign in
+        </Link>
+      </div>
     </Form>
     //   <div className="flex flex-col items-center gap-2 text-center">
     //     <h1 className="text-2xl font-bold">Register your account</h1>
