@@ -28,9 +28,9 @@ const formSchema = z.object({
     message: "Last name must be at least 2 characters.",
   }),
   email: z.string().email(),
-  phone: z.string().min(2, {
-    message: "Phone number must be at least 2 characters.",
-  }),
+  // phone: z.string().min(2, {
+  //   message: "Phone number must be at least 2 characters.",
+  // }),
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
   }),
@@ -46,7 +46,7 @@ export function RegisterForm({
       firstname: "",
       lastname: "",
       email: "",
-      phone: "",
+      // phone: "",
       password: "",
     },
   });
@@ -119,7 +119,7 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="phone"
           render={({ field }) => (
@@ -131,7 +131,7 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="email"

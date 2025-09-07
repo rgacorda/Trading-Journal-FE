@@ -41,9 +41,9 @@ const Header = () => {
             <Link className="text-gray-600 hover:text-gray-900 transition-colors duration-200" href={"/login"}>
               Sign In
             </Link>
-            <Button disabled className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors duration-200">
-              Coming Soon
-            </Button>
+            <Link className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors duration-200" href={"/register"}>
+              Sign up
+            </Link>
           </div>
 
           {/* Mobile menu button */}

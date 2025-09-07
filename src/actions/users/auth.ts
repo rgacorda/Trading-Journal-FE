@@ -11,7 +11,7 @@ type RegisterCredentials = {
   lastname: string;
   email: string;
   password: string;
-  phone: string;
+  // phone: string;
 };
 
 // ✅ Reusable error handler

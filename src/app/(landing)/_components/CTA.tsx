@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight, Shield } from 'lucide-react';
+import Link from 'next/link';
 
 const CTA = () => {
   return (
@@ -19,9 +20,9 @@ const CTA = () => {
               Free Trial Coming Soon
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
             </button>
-            <button disabled className="border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-gray-900 transition-all duration-200 font-semibold">
-              Demo Coming Soon
-            </button>
+            <Link className="border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-gray-900 transition-all duration-200 font-semibold" href={"/register"}>
+              Join Demo
+            </Link>
           </div>
 
           <div className="flex items-center justify-center space-x-6 text-gray-300">

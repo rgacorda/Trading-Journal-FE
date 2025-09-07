@@ -16,6 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const About = () => {
   const values = [
@@ -319,13 +320,13 @@ const About = () => {
               feedback will help shape the final product.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <Button size="lg" disabled>
-                Join the Waitlist (Coming Soon)
+              <Link href={"/register"} className="inline-flex items-center justify-center rounded-lg bg-gray-900 px-6 py-3 text-white hover:bg-gray-800 transition-colors duration-200" >
+                Join the Demo
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Button disabled variant="outline" size="lg">
+              </Link>
+              <Link href={"#"} className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-6 py-3 text-gray-700 hover:bg-gray-100 transition-colors duration-200" >
                 Provide Feedback (Coming Soon)
-              </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
