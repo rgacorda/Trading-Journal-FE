@@ -21,7 +21,7 @@ import {
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 
 const formSchema = z.object({

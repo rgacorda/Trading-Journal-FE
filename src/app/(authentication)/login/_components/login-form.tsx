@@ -66,7 +66,7 @@ export function LoginForm({
     toast.success("Logged in successfully");
     router.push("/dashboard/main");
   } catch (err: unknown) {
-    let message = "Login Failed";
+    let message = (err as Error).message ||  "Login Failed";
 
     if (
       typeof err === "object" &&
@@ -78,7 +78,6 @@ export function LoginForm({
     }
 
     toast.error(message);
-    console.error(err);
   }
 };
 

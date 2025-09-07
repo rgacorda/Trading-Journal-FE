@@ -11,10 +11,18 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
-export default function VerifyEmailPage({}: React.ComponentProps<"div">) {
+export default function VerifyEmailPage() {
+  return (
+    <Suspense>
+      <VerifyEmailContent />
+    </Suspense>
+  );
+}
+
+function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const [status, setStatus] = useState<
@@ -38,7 +46,7 @@ export default function VerifyEmailPage({}: React.ComponentProps<"div">) {
       }
     };
     verifyEmail();
-  }, [token]);
+  }, [token, router]);
 
   let cardContent;
   if (status === "loading") {
