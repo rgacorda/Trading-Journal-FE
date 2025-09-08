@@ -4,7 +4,6 @@ import Features from "./_components/Features";
 import Footer from "./_components/Footer";
 import Header from "./_components/Header";
 import Hero from "./_components/Hero";
-import Pricing from "./_components/Pricing";
 import Statistics from "./_components/Statistics";
 
 

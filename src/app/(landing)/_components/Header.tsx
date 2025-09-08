@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Menu, X, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

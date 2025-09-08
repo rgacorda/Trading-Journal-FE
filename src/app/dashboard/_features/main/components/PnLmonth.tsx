@@ -1,7 +1,6 @@
 "use client";
 
 import { Trade } from "@/actions/trades/trades";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,8 +10,6 @@ import {
 } from "@/components/ui/card";
 import {
   addDays,
-  addMonths,
-  subMonths,
   format,
   startOfMonth,
   endOfMonth,
@@ -22,11 +19,6 @@ import {
   isSameDay,
 } from "date-fns";
 import React, { useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -53,8 +45,6 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
   const startDate = startOfWeek(monthStart, { weekStartsOn: 0 });
   const endDate = endOfWeek(monthEnd, { weekStartsOn: 0 });
 
-  const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
-  const prevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
 
   // Group trades by date and summarize
   const events = React.useMemo(() => {
