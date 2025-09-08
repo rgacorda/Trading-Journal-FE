@@ -1,0 +1,12 @@
+{
+  "/favicon.ico/route": "/favicon.ico",
+  "/_not-found/page": "/_not-found",
+  "/(authentication)/login/page": "/login",
+  "/(authentication)/register/page": "/register",
+  "/(landing)/page": "/",
+  "/(authentication)/verify-email/page": "/verify-email",
+  "/(authentication)/forgot-password/page": "/forgot-password",
+  "/sample/page": "/sample",
+  "/dashboard/[site]/page": "/dashboard/[site]",
+  "/dashboard/[site]/(plans)/create/page": "/dashboard/[site]/create"
+}
