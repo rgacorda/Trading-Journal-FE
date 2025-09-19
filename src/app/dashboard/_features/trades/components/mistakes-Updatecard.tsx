@@ -3,6 +3,7 @@ import * as React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PlusIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -41,6 +42,7 @@ import { AxiosError } from "axios";
 const formSchema = z.object({
   mistake_input: z
     .string()
+    .min(1, { message: "Mistake is required" })
     .max(50, { message: "Mistake must be at most 50 characters" }),
 });
 
@@ -123,9 +125,7 @@ function AccountForm({
         }
       } catch (err) {
         const error = err as AxiosError;
-        const message =
-          error.message ||
-          "Failed to fetch trade data.";
+        const message = error.message || "Failed to fetch trade data.";
         toast.error(message);
       }
     };
@@ -133,19 +133,28 @@ function AccountForm({
     fetchTrade();
   }, [selectedId]);
 
+  // Add mistake using form validation
+  const handleAddMistake = async () => {
+    const values = await methods.trigger("mistake_input");
+    const value = methods.getValues("mistake_input").trim();
+    if (values && value && !mistakes.includes(value)) {
+      setMistakes((prev) => [...prev, value]);
+      methods.setValue("mistake_input", "");
+    }
+  };
+
+  // Save the mistakes array
   const onSubmit = async () => {
     if (!selectedId) return;
 
     try {
-      await updateTrade(selectedId, { mistakes });
+      await updateTrade(selectedId, { mistakes }); // <-- Save the array
       mutate("/trade/");
       toast.success("Mistakes updated successfully.");
       onOpenChange(false);
     } catch (err) {
       const error = err as AxiosError;
-      const message =
-        error.message ||
-        "Failed to update mistakes.";
+      const message = error.message || "Failed to update mistakes.";
       toast.error(message);
     }
   };
@@ -154,34 +163,36 @@ function AccountForm({
     <FormProvider {...methods}>
       <form
         className={cn("grid items-start gap-4", className)}
-        onSubmit={methods.handleSubmit(onSubmit)}
+        // onSubmit={methods.handleSubmit(onSubmit)}
       >
-        {/* <div className="grid gap-2">
-          <Label htmlFor="platform">Platform</Label>
-          <PlatformInput value={platformValue} setValue={setPlatformValue} />
-        </div> */}
-
         <FormField
           name="mistake_input"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Mistakes</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Add a mistake"
-                  {...field}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      const value = field.value.trim();
-                      if (value && !mistakes.includes(value)) {
-                        setMistakes((prev) => [...prev, value]);
-                        field.onChange("");
+              <div className="flex gap-2">
+                <FormControl>
+                  <Input
+                    placeholder="Add a mistake"
+                    {...field}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleAddMistake();
                       }
-                    }
-                  }}
-                />
-              </FormControl>
+                    }}
+                  />
+                </FormControl>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleAddMistake}
+                  className="shrink-0 p-2"
+                  aria-label="Add mistake"
+                >
+                  <PlusIcon size={18} />
+                </Button>
+              </div>
               <FormMessage />
             </FormItem>
           )}
@@ -189,15 +200,11 @@ function AccountForm({
 
         <div className="flex flex-wrap gap-2">
           {mistakes.map((item, index) => (
-            <Badge
-              key={index}
-              variant={"outline"}
-              //   className="bg-muted px-2 py-1 rounded text-sm flex items-center gap-1"
-            >
+            <Badge key={index} variant={"outline"}>
               {item}
               <button
                 type="button"
-                className="text-red-500"
+                className="text-red-500 ml-2"
                 onClick={() => {
                   setMistakes((prev) => prev.filter((_, i) => i !== index));
                 }}
@@ -208,7 +215,7 @@ function AccountForm({
           ))}
         </div>
 
-        <Button type="submit">Save</Button>
+        <Button type="button" onClick={onSubmit}>Save</Button>
       </form>
     </FormProvider>
   );

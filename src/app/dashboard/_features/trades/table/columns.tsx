@@ -127,10 +127,10 @@ export const columns: ColumnDef<Trade>[] = [
       return a - b;
     },
   },
-  {
-    accessorKey: "time",
-    header: "Time",
-  },
+  // {
+  //   accessorKey: "time",
+  //   header: "Time",
+  // },
   {
     accessorKey: "ticker",
     header: "Ticker",
