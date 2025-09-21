@@ -46,19 +46,27 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
   const endDate = endOfWeek(monthEnd, { weekStartsOn: 0 });
 
 
-  // Group trades by date and summarize
+
+  // Group trades by date and summarize, but only for current month
   const events = React.useMemo(() => {
     if (!trades) return [];
 
     const map = new Map<string, { count: number; realized: number }>();
 
     for (const trade of trades) {
-      const dateKey = new Date(trade.date).toISOString().split("T")[0];
-      const current = map.get(dateKey) || { count: 0, realized: 0 };
-      map.set(dateKey, {
-        count: current.count + 1,
-        realized: current.realized + Number(trade.realized),
-      });
+      const tradeDate = new Date(trade.date);
+      // Only include trades within the current month
+      if (
+        tradeDate.getFullYear() === currentMonth.getFullYear() &&
+        tradeDate.getMonth() === currentMonth.getMonth()
+      ) {
+        const dateKey = tradeDate.toISOString().split("T")[0];
+        const current = map.get(dateKey) || { count: 0, realized: 0 };
+        map.set(dateKey, {
+          count: current.count + 1,
+          realized: current.realized + Number(trade.realized),
+        });
+      }
     }
 
     return Array.from(map.entries()).map(([date, value]) => ({
@@ -68,7 +76,7 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
         value.count > 1 ? "s" : ""
       } | $${value.realized.toFixed(2)}`,
     }));
-  }, [trades]);
+  }, [trades, currentMonth]);
 
   // Calendar rendering
   const rows = [];
@@ -76,12 +84,14 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
   let day = startDate;
 
   while (day <= endDate) {
+
     for (let i = 0; i < 7; i++) {
       const isCurrentMonth = isSameMonth(day, monthStart);
       const isToday = isSameDay(day, new Date());
-      const dayEvents = events.filter((event) =>
-        isSameDay(new Date(event.date), day)
-      );
+      // Only show events for days in the current month
+      const dayEvents = isCurrentMonth
+        ? events.filter((event) => isSameDay(new Date(event.date), day))
+        : [];
       const daySummary = dayEvents[0];
       const realizedAmount = daySummary
         ? parseFloat(daySummary.title.split("|")[1].replace("$", ""))

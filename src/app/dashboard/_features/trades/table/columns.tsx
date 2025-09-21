@@ -118,8 +118,7 @@ export const columns: ColumnDef<Trade>[] = [
     ),
     cell: ({ row }) => {
   const value = row.getValue("date") as string;
-  const adjusted = subDays(new Date(value), 1);
-  return <div>{format(adjusted, "MMM dd, yyyy")}</div>;
+  return <div>{format(value, "MMM dd, yyyy")}</div>;
 },
     sortingFn: (rowA, rowB, columnId) => {
       const a = new Date(rowA.getValue(columnId)).getTime();

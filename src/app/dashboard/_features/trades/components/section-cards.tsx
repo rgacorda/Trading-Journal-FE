@@ -64,9 +64,9 @@ const revenueIncreaseOrDecrease = revenueIncrease >= 0 ? "increase" : "decrease"
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
+          {/* <div className="line-clamp-1 flex gap-2 font-medium">
             Trending up this month <IconTrendingUp className="size-4" />
-          </div>
+          </div> */}
           <div className="text-muted-foreground">
             Total Profit and Loss
           </div>
@@ -94,11 +94,11 @@ const revenueIncreaseOrDecrease = revenueIncrease >= 0 ? "increase" : "decrease"
           </CardAction> */}
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
+          {/* <div className="line-clamp-1 flex gap-2 font-medium">
             Down 20% this period <IconTrendingDown className="size-4" />
-          </div>
+          </div> */}
           <div className="text-muted-foreground">
-            Acquisition needs attention
+            Selected Strategy Win Rate
           </div>
         </CardFooter>
       </Card>
