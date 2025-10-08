@@ -36,48 +36,13 @@ export default function TradeDashboard() {
     const all = filteredTrades;
     if (!all || all.length === 0) {
       return {
-        totalRevenue: 0,
+        expectancy: 0,
         totalTrades: 0,
         totalWinRate: 0,
         pnlratio: 0,
-        totalRevenueLastMonth: 0,
         avgGrade: 0,
       };
     }
-
-    const now = new Date();
-    const firstDayOfLastMonth = new Date(
-      now.getFullYear(),
-      now.getMonth() - 1,
-      1
-    );
-    const lastDayOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-    const firstDayOfCurrentMonth = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      1
-    );
-    const lastDayOfCurrentMonth = new Date(
-      now.getFullYear(),
-      now.getMonth() + 1,
-      0
-    );
-
-    const totalRevenueCurrentMonth = all
-      .filter(
-        (t) =>
-          new Date(t.date) >= firstDayOfCurrentMonth &&
-          new Date(t.date) <= lastDayOfCurrentMonth
-      )
-      .reduce((sum, t) => sum + Number(t.realized), 0);
-
-    const totalRevenueLastMonth = all
-      .filter(
-        (t) =>
-          new Date(t.date) >= firstDayOfLastMonth &&
-          new Date(t.date) <= lastDayOfLastMonth
-      )
-      .reduce((sum, t) => sum + Number(t.realized), 0);
 
     const totalTrades = all.length;
     const winners = all.filter((t) => Number(t.realized) > 0);
@@ -93,6 +58,8 @@ export default function TradeDashboard() {
 
     const pnlratio = avgWin / (avgLoss || 1);
 
+    const expectancy = (winRate * avgWin) - ((1 - winRate) * avgLoss);
+
     const gradeValues = all
       .map((t) => Number(t.grade))
       .filter((g) => !isNaN(g) && g >= 0 && g <= 5);
@@ -103,11 +70,10 @@ export default function TradeDashboard() {
         : 0;
 
     return {
-      totalRevenue: totalRevenueCurrentMonth,
+      expectancy,
       totalTrades,
       totalWinRate: winRate * 100,
       pnlratio,
-      totalRevenueLastMonth,
       avgGrade,
     };
   }, [filteredTrades]);

@@ -1,42 +1,102 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Save, Edit3, User } from "lucide-react";
+import { Save, Edit3, User, Loader2 } from "lucide-react";
+import { getUser, updateUser } from "@/actions/users/user";
+import { useUserStore } from "@/stores/user-store";
+import { AxiosError } from "axios";
 
 export function ProfileInfo() {
-  // const [profileImage, setProfileImage] = useState("https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg");
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: "Jessica",
-    lastName: "Smith",
-    email: "jessica.smith@example.com"
+    firstname: "",
+    lastname: "",
+    email: ""
+  });
+  const [originalData, setOriginalData] = useState({
+    firstname: "",
+    lastname: "",
+    email: ""
   });
 
-  // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e) => {
-  //       setProfileImage(e.target?.result as string);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
+  const setUser = useUserStore((s) => s.setUser);
+  const currentUser = useUserStore((s) => s.user);
 
-  const handleSave = () => {
-    // Simulate API call
-    setTimeout(() => {
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setIsLoading(true);
+        const userData = await getUser();
+        const data = {
+          firstname: userData.firstname || "",
+          lastname: userData.lastname || "",
+          email: userData.email || ""
+        };
+        setFormData(data);
+        setOriginalData(data);
+
+        // Update user store with full user data
+        setUser({
+          firstname: userData.firstname || "",
+          lastname: userData.lastname || "",
+          middlename: userData.middlename || null,
+          email: userData.email || "",
+          phone: userData.phone || "",
+          avatar: "",
+          role: userData.role || "free"
+        });
+      } catch (err) {
+        const error = err as AxiosError<{ message?: string }>;
+        toast.error(error.response?.data?.message || "Failed to load user data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [setUser]);
+
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+      const updatedData = await updateUser({
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        email: formData.email
+      });
+
+      setOriginalData(formData);
       setIsEditing(false);
+
+      // Update user store with the new data
+      setUser({
+        ...currentUser,
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        email: formData.email,
+        middlename: currentUser?.middlename || null,
+        phone: currentUser?.phone || "",
+        avatar: currentUser?.avatar || "",
+        role: currentUser?.role || "free"
+      });
+
       toast.success("Profile updated successfully");
-    }, 500);
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      toast.error(error.response?.data?.message || "Failed to update profile");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    // Reset form data if needed
+    setFormData(originalData);
   };
 
   return (
@@ -54,56 +114,30 @@ export function ProfileInfo() {
         )}
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Profile Photo Section */}
-          {/* <div className="flex flex-col items-center space-y-4 md:min-w-[200px]">
-            <div className="relative">
-              <Avatar className="w-32 h-32">
-                <AvatarImage src={profileImage} alt="Profile" />
-                <AvatarFallback>JS</AvatarFallback>
-              </Avatar>
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 hover:opacity-100 transition-opacity cursor-pointer">
-                <Camera className="w-8 h-8 text-white" />
-              </div>
-            </div>
-            
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" asChild>
-                <label className="cursor-pointer">
-                  <Upload className="w-4 h-4 mr-2" />
-                  Upload
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-                </label>
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => setProfileImage("")}>
-                Remove
-              </Button>
-            </div>
-          </div> */}
-
-          {/* Personal Information Section */}
-          <div className="flex-1 space-y-4">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : (
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Personal Information Section */}
+            <div className="flex-1 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstName">First Name</Label>
+                <Label htmlFor="firstname">First Name</Label>
                 <Input
-                  id="firstName"
-                  value={formData.firstName}
-                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  id="firstname"
+                  value={formData.firstname}
+                  onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
                   disabled={!isEditing}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lastName">Last Name</Label>
+                <Label htmlFor="lastname">Last Name</Label>
                 <Input
-                  id="lastName"
-                  value={formData.lastName}
-                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  id="lastname"
+                  value={formData.lastname}
+                  onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
                   disabled={!isEditing}
                 />
               </div>
@@ -122,17 +156,27 @@ export function ProfileInfo() {
 
             {isEditing && (
               <div className="flex gap-2 pt-4">
-                <Button onClick={handleSave} size="sm">
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Changes
+                <Button onClick={handleSave} size="sm" disabled={isSaving}>
+                  {isSaving ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </>
+                  )}
                 </Button>
-                <Button variant="outline" onClick={handleCancel} size="sm">
+                <Button variant="outline" onClick={handleCancel} size="sm" disabled={isSaving}>
                   Cancel
                 </Button>
               </div>
             )}
           </div>
         </div>
+        )}
       </CardContent>
     </Card>
   );

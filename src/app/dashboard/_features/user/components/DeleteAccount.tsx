@@ -5,30 +5,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Trash2, AlertTriangle } from "lucide-react";
+import { Trash2, AlertTriangle, Loader2 } from "lucide-react";
+import { deleteUser } from "@/actions/users/user";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
 export function DeleteAccount() {
   const [confirmText, setConfirmText] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     if (confirmText !== "DELETE") {
       toast.error("Please type 'DELETE' to confirm account deletion");
       return;
     }
 
-    // Simulate API call
-    setTimeout(() => {
-      toast.error("Account deletion initiated. You will be logged out shortly.");
+    try {
+      setIsDeleting(true);
+      await deleteUser();
+      toast.success("Account deleted successfully. Redirecting...");
       setIsOpen(false);
       setConfirmText("");
-    }, 500);
+
+      // Redirect to login or home page after deletion
+      setTimeout(() => {
+        router.push("/login");
+      }, 1500);
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      toast.error(error.response?.data?.message || "Failed to delete account");
+      setIsDeleting(false);
+    }
   };
 
   return (
-    <Card className="border-destructive/20">
+    <Card className="border-orange-200 dark:border-orange-900/30">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-destructive">
+        <CardTitle className="flex items-center gap-2 text-orange-700 dark:text-orange-400">
           <AlertTriangle className="w-5 h-5" />
           Danger Zone
         </CardTitle>
@@ -44,14 +59,14 @@ export function DeleteAccount() {
 
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive" className="w-full">
+            <Button variant="outline" className="w-full border-orange-300 text-orange-700 hover:bg-orange-50 dark:border-orange-800 dark:text-orange-400 dark:hover:bg-orange-950">
               <Trash2 className="w-4 h-4 mr-2" />
               Delete Account
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertDialogTitle className="flex items-center gap-2 text-orange-700 dark:text-orange-400">
                 <AlertTriangle className="w-5 h-5" />
                 Are you absolutely sure?
               </AlertDialogTitle>
@@ -74,14 +89,22 @@ export function DeleteAccount() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setConfirmText("")}>
+              <AlertDialogCancel onClick={() => setConfirmText("")} disabled={isDeleting}>
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDeleteAccount}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                disabled={isDeleting}
+                className="bg-orange-600 text-white hover:bg-orange-700 dark:bg-orange-700 dark:hover:bg-orange-800"
               >
-                Delete Account
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  "Delete Account"
+                )}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

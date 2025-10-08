@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Eye, EyeOff, Lock } from "lucide-react";
+import { Eye, EyeOff, Lock, Loader2 } from "lucide-react";
+import { changePassword } from "@/actions/users/user";
+import { AxiosError } from "axios";
 
 export function ChangePassword() {
   const [showPasswords, setShowPasswords] = useState({
@@ -17,14 +19,15 @@ export function ChangePassword() {
     new: "",
     confirm: ""
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const togglePasswordVisibility = (field: keyof typeof showPasswords) => {
     setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (passwords.new !== passwords.confirm) {
       toast.error("New password and confirmation don't match");
       return;
@@ -35,11 +38,21 @@ export function ChangePassword() {
       return;
     }
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      setIsSubmitting(true);
+      await changePassword({
+        currentPassword: passwords.current,
+        newPassword: passwords.new,
+        confirmPassword: passwords.confirm
+      });
       setPasswords({ current: "", new: "", confirm: "" });
       toast.success("Password changed successfully");
-    }, 500);
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      toast.error(error.response?.data?.message || "Failed to change password");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -120,8 +133,15 @@ export function ChangePassword() {
             </div>
           </div>
 
-          <Button type="submit" className="w-full">
-            Update Password
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Updating...
+              </>
+            ) : (
+              "Update Password"
+            )}
           </Button>
         </form>
       </CardContent>
