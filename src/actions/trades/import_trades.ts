@@ -5,23 +5,23 @@ type ImportTrades = {
   file: File;
   account: string;
   date: Date | undefined;
-  timezone?: string;
 };
 
-// Convert date to timezone-aware ISO string
-const dateToTimezoneISO = (date: Date, timezone: string): string => {
+// Convert date to DATEONLY format (YYYY-MM-DD)
+const dateToDateOnlyString = (date: Date): string => {
   try {
-    // Format the date in the user's timezone
+    // Get the date components from the local date object
+    // This preserves the exact date the user selected in their calendar
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
 
-    // Create a date string in the format YYYY-MM-DD in the user's timezone
-    // This ensures the backend receives the exact date the user selected
-    return `${year}-${month}-${day}T00:00:00`;
+    // Return only the date portion (no time, no timezone)
+    return `${year}-${month}-${day}`;
   } catch (error) {
     console.error("Error converting date:", error);
-    return date.toISOString();
+    // Fallback: extract date from ISO string
+    return date.toISOString().split('T')[0];
   }
 };
 
@@ -33,14 +33,10 @@ export const ImportTradesService = {
     formData.append("accountId", data.account);
 
     if (data.date) {
-      const dateString = dateToTimezoneISO(data.date, data.timezone || "UTC");
+      const dateString = dateToDateOnlyString(data.date);
       formData.append("date", dateString);
     } else {
       formData.append("date", "");
-    }
-
-    if (data.timezone) {
-      formData.append("timezone", data.timezone);
     }
 
     return api.post("/trade/upload", formData, {

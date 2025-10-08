@@ -52,7 +52,8 @@ export function ChartAreaInteractive() {
 
     const map = new Map<string, number>();
     for (const trade of trades) {
-      const dateKey = new Date(trade.date).toISOString().split("T")[0];
+      // Use the date string directly (no need to convert since it's already YYYY-MM-DD)
+      const dateKey = trade.date;
       map.set(dateKey, (map.get(dateKey) || 0) + getAdjustedRealized(trade));
     }
 

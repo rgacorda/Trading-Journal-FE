@@ -24,6 +24,7 @@ import { fetcher } from "@/lib/fetcher";
 import { useTradeUIStore } from "@/stores/trade-ui-store";
 import { AxiosError } from "axios";
 import React from "react";
+import { parseDateOnly } from "@/lib/utils";
 
 function PlanSelectCell({ trade }: { trade: Trade }) {
   const { data: plans } = useSWR<Plan[]>("/plan/", fetcher);
@@ -118,11 +119,13 @@ export const columns: ColumnDef<Trade>[] = [
     ),
     cell: ({ row }) => {
   const value = row.getValue("date") as string;
-  return <div>{format(value, "MMM dd, yyyy")}</div>;
+  // Parse DATEONLY string correctly to avoid timezone shifts
+  return <div>{format(parseDateOnly(value), "MMM dd, yyyy")}</div>;
 },
     sortingFn: (rowA, rowB, columnId) => {
-      const a = new Date(rowA.getValue(columnId)).getTime();
-      const b = new Date(rowB.getValue(columnId)).getTime();
+      // Parse DATEONLY strings correctly for sorting
+      const a = parseDateOnly(rowA.getValue(columnId) as string).getTime();
+      const b = parseDateOnly(rowB.getValue(columnId) as string).getTime();
       return a - b;
     },
   },

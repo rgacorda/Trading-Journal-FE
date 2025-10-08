@@ -22,7 +22,6 @@ import {
 import { ChevronDownIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { AccountInput } from "./account_input";
-import { useUserStore } from "@/stores/user-store";
 
 interface DialogProps {
   open: boolean;
@@ -35,7 +34,6 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
   const [account, setAccount] = useState<string>("");
   // const [openCalendar, setOpenCalendar] = useState(false)
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const userTimezone = useUserStore((s) => s.user?.timezone) || "UTC";
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -65,7 +63,6 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
           file,
           account,
           date,
-          timezone: userTimezone,
         });
       } catch (error: unknown) {
         if (
@@ -97,7 +94,7 @@ export function ImportTrade({ open, onOpenChange }: DialogProps) {
         <DialogHeader>
           <DialogTitle>Import Trades</DialogTitle>
           <DialogDescription>
-            Select Platform first before importing trades. Using timezone: {userTimezone}
+            Select Platform first before importing trades.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">

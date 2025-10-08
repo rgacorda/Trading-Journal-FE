@@ -20,6 +20,7 @@ import {
   isSameDay,
 } from "date-fns";
 import React, { useState } from "react";
+import { parseDateOnly } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -70,13 +71,15 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
     const map = new Map<string, { count: number; realized: number }>();
 
     for (const trade of trades) {
-      const tradeDate = new Date(trade.date);
+      // Parse DATEONLY string correctly to avoid timezone shifts
+      const tradeDate = parseDateOnly(trade.date);
       // Only include trades within the current month
       if (
         tradeDate.getFullYear() === currentMonth.getFullYear() &&
         tradeDate.getMonth() === currentMonth.getMonth()
       ) {
-        const dateKey = tradeDate.toISOString().split("T")[0];
+        // Use the original date string as the key (no conversion needed)
+        const dateKey = trade.date;
         const current = map.get(dateKey) || { count: 0, realized: 0 };
         map.set(dateKey, {
           count: current.count + 1,
@@ -106,7 +109,7 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
       const isToday = isSameDay(day, new Date());
       // Only show events for days in the current month
       const dayEvents = isCurrentMonth
-        ? events.filter((event) => isSameDay(new Date(event.date), day))
+        ? events.filter((event) => isSameDay(parseDateOnly(event.date), day))
         : [];
       const daySummary = dayEvents[0];
       const realizedAmount = daySummary
