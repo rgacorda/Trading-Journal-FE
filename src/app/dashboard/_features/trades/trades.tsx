@@ -47,7 +47,7 @@ export default function TradeDashboard() {
 
     // Create a map of accountId -> isCommissionsIncluded
     const accountCommissionMap = new Map(
-      accounts.map((acc: any) => [acc.id, acc.isCommissionsIncluded])
+      accounts.map((acc: { id: string; isCommissionsIncluded?: boolean }) => [acc.id, acc.isCommissionsIncluded])
     );
 
     // Helper function to get adjusted realized value

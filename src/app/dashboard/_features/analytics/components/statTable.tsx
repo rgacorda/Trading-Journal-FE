@@ -12,7 +12,7 @@ type StatItem = {
 
 function calculateStats(
   trades: Trade[] | undefined,
-  accounts: any[] | undefined
+  accounts: { id: string; isCommissionsIncluded?: boolean }[] | undefined
 ): {
   left: StatItem[];
   right: StatItem[];
@@ -23,7 +23,7 @@ function calculateStats(
 
   // Create a map of accountId -> isCommissionsIncluded
   const accountCommissionMap = new Map(
-    accounts.map((acc: any) => [acc.id, acc.isCommissionsIncluded])
+    accounts.map((acc) => [acc.id, acc.isCommissionsIncluded])
   );
 
   // Helper function to get adjusted realized value

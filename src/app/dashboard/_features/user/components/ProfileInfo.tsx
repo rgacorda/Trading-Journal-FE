@@ -64,7 +64,7 @@ export function ProfileInfo() {
   const handleSave = async () => {
     try {
       setIsSaving(true);
-      const updatedData = await updateUser({
+      await updateUser({
         firstname: formData.firstname,
         lastname: formData.lastname,
         email: formData.email

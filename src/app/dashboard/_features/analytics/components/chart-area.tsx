@@ -38,7 +38,7 @@ export function ChartAreaInteractive() {
   const getAdjustedRealized = React.useCallback((trade: Trade) => {
     if (!accounts) return Number(trade.realized);
 
-    const account = accounts.find((acc: any) => acc.id === trade.accountId);
+    const account = accounts.find((acc: { id: string; isCommissionsIncluded?: boolean }) => acc.id === trade.accountId);
     const isCommissionsIncluded = account?.isCommissionsIncluded || false;
     const realized = Number(trade.realized);
     const fees = Number(trade.fees) || 0;
