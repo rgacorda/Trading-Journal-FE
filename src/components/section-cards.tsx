@@ -1,9 +1,5 @@
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
-
-import { Badge } from "@/components/ui/badge"
 import {
   Card,
-  CardAction,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -12,26 +8,14 @@ import {
 
 interface MainSectionCardsProps {
   data: {
-    totalRevenue: number | undefined;
+    totalRevenue: number;
     totalWinRate: number;
     totalTrades: number;
     expectancy: number;
     pnlratio: number;
-    totalRevenueLastMonth: number | undefined;
-    expectancyChangePercentage: number;
   }
 }
 export function SectionCards(data: MainSectionCardsProps) {
-
-const revenueIncrease = data.data.totalRevenueLastMonth
-  ? (data.data.totalRevenue ?? 0) - data.data.totalRevenueLastMonth
-  : 0;
-const revenueIncreasePercentage = revenueIncrease
-  ? (revenueIncrease / (data.data.totalRevenueLastMonth ?? 1)) * 100
-  : 0;
-const revenueIncreaseOrDecrease = revenueIncrease >= 0 ? "increase" : "decrease";
-
-
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
@@ -40,41 +24,18 @@ const revenueIncreaseOrDecrease = revenueIncrease >= 0 ? "increase" : "decrease"
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             <span
               className={`${
-                data.data.totalRevenue === undefined || data.data.totalRevenue < 0
+                data.data.totalRevenue < 0
                   ? "text-red-500"
                   : "text-green-500"
               }`}
             >
-              {data.data.totalRevenue?.toFixed(2) ?? 0}
+              {data.data.totalRevenue.toFixed(2)}
             </span>
           </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              {revenueIncreaseOrDecrease === "decrease" ? (
-                <>
-                  <IconTrendingDown />
-                  {Math.abs(revenueIncreasePercentage).toFixed(1)}%
-                </>
-              ) : (
-                <>
-                  <IconTrendingUp />
-                  {revenueIncreasePercentage.toFixed(1)}%
-                </>
-              )}
-            </Badge>
-          </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            {revenueIncreaseOrDecrease === "increase" ? (
-              <>
-                Trending up this month <IconTrendingUp className="size-4" />
-              </>
-            ) : (
-              <>
-                Trending down this month <IconTrendingDown className="size-4" />
-              </>
-            )}
+            Overall Performance
           </div>
           <div className="text-muted-foreground">
             Total Profit and Loss
@@ -137,46 +98,21 @@ const revenueIncreaseOrDecrease = revenueIncrease >= 0 ? "increase" : "decrease"
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             <span
               className={`${
-                data.data.expectancy === undefined || data.data.expectancy < 0
+                data.data.expectancy < 0
                   ? "text-red-500"
                   : "text-green-500"
               }`}
             >
-              {data.data.expectancy?.toFixed(2) ?? 0}
+              {data.data.expectancy.toFixed(2)}
             </span>
           </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              {data.data.expectancyChangePercentage >= 0 ? (
-                <>
-                  <IconTrendingUp />
-                  +{data.data.expectancyChangePercentage.toFixed(1)}%
-                </>
-              ) : (
-                <>
-                  <IconTrendingDown />
-                  {data.data.expectancyChangePercentage.toFixed(1)}%
-                </>
-              )}
-            </Badge>
-          </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            {data.data.expectancyChangePercentage >= 0 ? (
-              <>
-                Steady performance increase <IconTrendingUp className="size-4" />
-              </>
-            ) : (
-              <>
-                Performance decrease <IconTrendingDown className="size-4" />
-              </>
-            )}
+            Overall Expectancy
           </div>
           <div className="text-muted-foreground">
-            {data.data.expectancyChangePercentage >= 0
-              ? "Meets growth projections"
-              : "Falls short of growth projections"}
+            Average expected profit per trade
           </div>
         </CardFooter>
       </Card>

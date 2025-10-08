@@ -26,33 +26,9 @@ export default function MainDashboard() {
     return isCommissionsIncluded ? realized - fees : realized;
   }, [accounts]);
 
-  const now = new Date();
-
-  // Last month (June)
-  const firstDayOfLastMonth = new Date(now.getFullYear(), 5, 1);
-  const lastDayOfLastMonth = new Date(now.getFullYear(), 6, 0);
-
-  // Current month (July)
-  const firstDayOfCurrentMonth = new Date(now.getFullYear(), 6, 1);
-  const lastDayOfCurrentMonth = new Date(now.getFullYear(), 7, 0);
-
-  // Revenue current month
-  const totalRevenueCurrentMonth = trades
-    ?.filter(
-      (trade) =>
-        new Date(trade.date) >= firstDayOfCurrentMonth &&
-        new Date(trade.date) <= lastDayOfCurrentMonth
-    )
-    .reduce((acc, trade) => acc + getAdjustedRealized(trade), 0) ?? 0;
-
-  // Revenue last month
-  const totalRevenueLastMonth = trades
-    ?.filter(
-      (trade) =>
-        new Date(trade.date) >= firstDayOfLastMonth &&
-        new Date(trade.date) <= lastDayOfLastMonth
-    )
-    .reduce((acc, trade) => acc + getAdjustedRealized(trade), 0) ?? 0;
+  // Overall Revenue (all time)
+  const totalRevenue = trades
+    ?.reduce((acc, trade) => acc + getAdjustedRealized(trade), 0) ?? 0;
 
   const totalTrades = trades?.length ?? 0;
   const winningTrades = trades?.filter((t) => getAdjustedRealized(t) > 0) ?? [];
@@ -73,99 +49,18 @@ export default function MainDashboard() {
 
   const pnlratio = averageWin / (averageLoss || 1);
 
-  // Expectancy this month (July)
-  const winningTradesCurrentMonth =
-    trades?.filter(
-      (t) =>
-        new Date(t.date) >= firstDayOfCurrentMonth &&
-        new Date(t.date) <= lastDayOfCurrentMonth &&
-        getAdjustedRealized(t) > 0
-    ) ?? [];
-
-  const losingTradesCurrentMonth =
-    trades?.filter(
-      (t) =>
-        new Date(t.date) >= firstDayOfCurrentMonth &&
-        new Date(t.date) <= lastDayOfCurrentMonth &&
-        getAdjustedRealized(t) < 0
-    ) ?? [];
-
-  const totalTradesCurrentMonth =
-    winningTradesCurrentMonth.length + losingTradesCurrentMonth.length;
-  const winRateCurrentMonth =
-    totalTradesCurrentMonth > 0
-      ? winningTradesCurrentMonth.length / totalTradesCurrentMonth
-      : 0;
-
-  const avgWinCurrentMonth =
-    winningTradesCurrentMonth.reduce((acc, t) => acc + getAdjustedRealized(t), 0) /
-    (winningTradesCurrentMonth.length || 1);
-  const avgLossCurrentMonth =
-    losingTradesCurrentMonth.reduce(
-      (acc, t) => acc + Math.abs(getAdjustedRealized(t)),
-      0
-    ) / (losingTradesCurrentMonth.length || 1);
-
-  const expectancyCurrentMonth =
-    winRateCurrentMonth * avgWinCurrentMonth -
-    (1 - winRateCurrentMonth) * avgLossCurrentMonth;
-
-  // Expectancy last month (June)
-  const winningTradesLastMonth =
-    trades?.filter(
-      (t) =>
-        new Date(t.date) >= firstDayOfLastMonth &&
-        new Date(t.date) <= lastDayOfLastMonth &&
-        getAdjustedRealized(t) > 0
-    ) ?? [];
-
-  const losingTradesLastMonth =
-    trades?.filter(
-      (t) =>
-        new Date(t.date) >= firstDayOfLastMonth &&
-        new Date(t.date) <= lastDayOfLastMonth &&
-        getAdjustedRealized(t) < 0
-    ) ?? [];
-
-  const totalTradesLastMonth =
-    winningTradesLastMonth.length + losingTradesLastMonth.length;
-  const winRateLastMonth =
-    totalTradesLastMonth > 0
-      ? winningTradesLastMonth.length / totalTradesLastMonth
-      : 0;
-
-  const avgWinLastMonth =
-    winningTradesLastMonth.reduce((acc, t) => acc + getAdjustedRealized(t), 0) /
-    (winningTradesLastMonth.length || 1);
-  const avgLossLastMonth =
-    losingTradesLastMonth.reduce(
-      (acc, t) => acc + Math.abs(getAdjustedRealized(t)),
-      0
-    ) / (losingTradesLastMonth.length || 1);
-
-  const expectancyLastMonth =
-    winRateLastMonth * avgWinLastMonth -
-    (1 - winRateLastMonth) * avgLossLastMonth;
-
-  // Expectancy Change %
-  const expectancyChangePercent =
-    expectancyLastMonth === 0
-      ? 0
-      : ((expectancyCurrentMonth - expectancyLastMonth) /
-          Math.abs(expectancyLastMonth)) *
-        100;
+  // Overall Expectancy
+  const expectancy = (winRate * averageWin) - ((1 - winRate) * averageLoss);
 
   return (
     <div>
       <SectionCards
         data={{
-          totalRevenue: totalRevenueCurrentMonth,
+          totalRevenue,
           totalWinRate: winRate * 100,
           totalTrades,
-          expectancy: expectancyCurrentMonth,
+          expectancy,
           pnlratio,
-          totalRevenueLastMonth,
-          expectancyChangePercentage: expectancyChangePercent,
         }}
       />
       <div className="py-4 px-4 lg:px-6">
