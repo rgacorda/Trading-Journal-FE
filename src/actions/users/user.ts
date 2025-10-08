@@ -20,6 +20,7 @@ export type User = {
   middlename?: string;
   phone?: string;
   role?: string;
+  timezone?: string;
   isVerified?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -29,6 +30,7 @@ export type UpdateUserData = {
   firstname?: string;
   lastname?: string;
   email?: string;
+  timezone?: string;
 };
 
 export type ChangePasswordData = {

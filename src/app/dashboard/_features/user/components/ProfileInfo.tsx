@@ -8,6 +8,43 @@ import { Save, Edit3, User, Loader2 } from "lucide-react";
 import { getUser, updateUser } from "@/actions/users/user";
 import { useUserStore } from "@/stores/user-store";
 import { AxiosError } from "axios";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+// Common timezones list (organized by region)
+const TIMEZONES = [
+  // Asia-Pacific
+  { value: "Asia/Manila", label: "Manila, Philippines (UTC+8)" },
+  { value: "Asia/Singapore", label: "Singapore (UTC+8)" },
+  { value: "Asia/Hong_Kong", label: "Hong Kong (UTC+8)" },
+  { value: "Asia/Shanghai", label: "Shanghai, Beijing (UTC+8)" },
+  { value: "Asia/Tokyo", label: "Tokyo, Japan (UTC+9)" },
+  { value: "Asia/Seoul", label: "Seoul, South Korea (UTC+9)" },
+  { value: "Australia/Sydney", label: "Sydney (UTC+10/+11)" },
+  { value: "Pacific/Auckland", label: "Auckland (UTC+12/+13)" },
+  { value: "Asia/Kolkata", label: "India (UTC+5:30)" },
+  { value: "Asia/Dubai", label: "Dubai (UTC+4)" },
+
+  // Europe
+  { value: "Europe/London", label: "London (UTC+0/+1)" },
+  { value: "Europe/Paris", label: "Paris, Berlin, Rome (UTC+1/+2)" },
+  { value: "Europe/Moscow", label: "Moscow (UTC+3)" },
+
+  // Americas
+  { value: "America/New_York", label: "New York (UTC-5/-4)" },
+  { value: "America/Chicago", label: "Chicago (UTC-6/-5)" },
+  { value: "America/Denver", label: "Denver (UTC-7/-6)" },
+  { value: "America/Los_Angeles", label: "Los Angeles (UTC-8/-7)" },
+  { value: "America/Sao_Paulo", label: "São Paulo (UTC-3)" },
+
+  // UTC
+  { value: "UTC", label: "UTC (UTC+0)" },
+];
 
 export function ProfileInfo() {
   const [isEditing, setIsEditing] = useState(false);
@@ -16,12 +53,14 @@ export function ProfileInfo() {
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
-    email: ""
+    email: "",
+    timezone: "UTC"
   });
   const [originalData, setOriginalData] = useState({
     firstname: "",
     lastname: "",
-    email: ""
+    email: "",
+    timezone: "UTC"
   });
 
   const setUser = useUserStore((s) => s.setUser);
@@ -32,10 +71,26 @@ export function ProfileInfo() {
       try {
         setIsLoading(true);
         const userData = await getUser();
+
+        // Detect user's timezone if not already set
+        let userTimezone = userData.timezone;
+        if (!userTimezone) {
+          userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+
+          // Auto-save detected timezone to backend
+          try {
+            await updateUser({ timezone: userTimezone });
+            toast.success(`Timezone automatically set to ${userTimezone}`);
+          } catch (error) {
+            console.error("Failed to auto-save timezone:", error);
+          }
+        }
+
         const data = {
           firstname: userData.firstname || "",
           lastname: userData.lastname || "",
-          email: userData.email || ""
+          email: userData.email || "",
+          timezone: userTimezone
         };
         setFormData(data);
         setOriginalData(data);
@@ -48,7 +103,8 @@ export function ProfileInfo() {
           email: userData.email || "",
           phone: userData.phone || "",
           avatar: "",
-          role: userData.role || "free"
+          role: userData.role || "free",
+          timezone: userTimezone
         });
       } catch (err) {
         const error = err as AxiosError<{ message?: string }>;
@@ -67,7 +123,8 @@ export function ProfileInfo() {
       await updateUser({
         firstname: formData.firstname,
         lastname: formData.lastname,
-        email: formData.email
+        email: formData.email,
+        timezone: formData.timezone
       });
 
       setOriginalData(formData);
@@ -82,7 +139,8 @@ export function ProfileInfo() {
         middlename: currentUser?.middlename || null,
         phone: currentUser?.phone || "",
         avatar: currentUser?.avatar || "",
-        role: currentUser?.role || "free"
+        role: currentUser?.role || "free",
+        timezone: formData.timezone
       });
 
       toast.success("Profile updated successfully");
@@ -152,6 +210,26 @@ export function ProfileInfo() {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 disabled={!isEditing}
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="timezone">Timezone</Label>
+              <Select
+                value={formData.timezone}
+                onValueChange={(value) => setFormData({ ...formData, timezone: value })}
+                disabled={!isEditing}
+              >
+                <SelectTrigger id="timezone" className="w-full">
+                  <SelectValue placeholder="Select timezone" />
+                </SelectTrigger>
+                <SelectContent>
+                  {TIMEZONES.map((tz) => (
+                    <SelectItem key={tz.value} value={tz.value}>
+                      {tz.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {isEditing && (

@@ -62,7 +62,17 @@ export function LoginForm({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
   try {
     const response = await Login(values);
-    useUserStore.getState().setUser(response.user);
+
+    // Auto-detect timezone if not set
+    let userTimezone = response.user.timezone;
+    if (!userTimezone) {
+      userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+    }
+
+    useUserStore.getState().setUser({
+      ...response.user,
+      timezone: userTimezone
+    });
     toast.success("Logged in successfully");
     router.push("/dashboard/main");
   } catch (err: unknown) {

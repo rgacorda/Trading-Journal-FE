@@ -14,7 +14,8 @@ api.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url.includes("/auth/refresh")
+      !originalRequest.url.includes("/auth/refresh") &&
+      !originalRequest.url.includes("/auth/login")
     ) {
       originalRequest._retry = true;
 
@@ -25,7 +26,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         console.error("Refresh token failed", refreshError);
-        if (typeof window !== "undefined") {
+        if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
           window.location.replace("/login?expired=1");
         }
       }

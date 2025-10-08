@@ -9,6 +9,7 @@ type User = {
   phone: string;
   avatar: string;
   role: string;
+  timezone: string;
 };
 
 type UserState = {

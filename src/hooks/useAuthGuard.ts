@@ -13,8 +13,10 @@ export default function useAuthGuard() {
         await axios.get('/auth/check-auth', {
           withCredentials: true,
         });
-      } catch {
-        router.replace('/login?expired=1');
+      } catch (error) {
+        // Only redirect if we're not already on the login page
+        // The axios interceptor will handle the redirect if needed
+        console.error("Auth check failed:", error);
       }
     };
 
