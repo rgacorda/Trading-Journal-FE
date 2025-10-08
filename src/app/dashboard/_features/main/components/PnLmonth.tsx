@@ -1,6 +1,7 @@
 "use client";
 
 import { Trade } from "@/actions/trades/trades";
+import { Account } from "@/actions/accounts/account";
 import {
   Card,
   CardContent,
@@ -26,6 +27,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
 
 export type Event = {
   id: string;
@@ -39,6 +42,7 @@ type Props = {
 
 export const MonthCalendar: React.FC<Props> = ({ trades }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const { data: accounts } = useSWR<Account[]>("/account/", fetcher);
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
@@ -47,9 +51,21 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
 
 
 
+  // Helper to get adjusted realized based on commission setting
+  const getAdjustedRealized = React.useCallback((trade: Trade) => {
+    if (!accounts) return Number(trade.realized);
+
+    const account = accounts.find(acc => acc.id === trade.accountId);
+    const isCommissionsIncluded = account?.isCommissionsIncluded || false;
+    const realized = Number(trade.realized);
+    const fees = Number(trade.fees) || 0;
+
+    return isCommissionsIncluded ? realized - fees : realized;
+  }, [accounts]);
+
   // Group trades by date and summarize, but only for current month
   const events = React.useMemo(() => {
-    if (!trades) return [];
+    if (!trades || !accounts) return [];
 
     const map = new Map<string, { count: number; realized: number }>();
 
@@ -64,7 +80,7 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
         const current = map.get(dateKey) || { count: 0, realized: 0 };
         map.set(dateKey, {
           count: current.count + 1,
-          realized: current.realized + Number(trade.realized),
+          realized: current.realized + getAdjustedRealized(trade),
         });
       }
     }
@@ -76,7 +92,7 @@ export const MonthCalendar: React.FC<Props> = ({ trades }) => {
         value.count > 1 ? "s" : ""
       } | $${value.realized.toFixed(2)}`,
     }));
-  }, [trades, currentMonth]);
+  }, [trades, currentMonth, accounts, getAdjustedRealized]);
 
   // Calendar rendering
   const rows = [];

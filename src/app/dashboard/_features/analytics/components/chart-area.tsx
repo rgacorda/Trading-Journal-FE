@@ -31,16 +31,29 @@ import {
 export function ChartAreaInteractive() {
   const isMobile = useIsMobile();
   const { data: trades } = useSWR<Trade[]>("/trade/", fetcher);
+  const { data: accounts } = useSWR("/account/", fetcher);
   const [timeRange, setTimeRange] = React.useState("90d");
+
+  // Helper function to get adjusted realized value
+  const getAdjustedRealized = React.useCallback((trade: Trade) => {
+    if (!accounts) return Number(trade.realized);
+
+    const account = accounts.find((acc: any) => acc.id === trade.accountId);
+    const isCommissionsIncluded = account?.isCommissionsIncluded || false;
+    const realized = Number(trade.realized);
+    const fees = Number(trade.fees) || 0;
+
+    return isCommissionsIncluded ? realized - fees : realized;
+  }, [accounts]);
 
   // Group and sum realized per day
   const groupedData = React.useMemo(() => {
-    if (!trades) return [];
+    if (!trades || !accounts) return [];
 
     const map = new Map<string, number>();
     for (const trade of trades) {
       const dateKey = new Date(trade.date).toISOString().split("T")[0];
-      map.set(dateKey, (map.get(dateKey) || 0) + Number(trade.realized));
+      map.set(dateKey, (map.get(dateKey) || 0) + getAdjustedRealized(trade));
     }
 
     // Convert to cumulative sorted list
@@ -53,7 +66,7 @@ export function ChartAreaInteractive() {
       cumulative += realized;
       return { date, cumulative };
     });
-  }, [trades]);
+  }, [trades, accounts, getAdjustedRealized]);
 
   const filteredData = React.useMemo(() => {
     const reference = new Date();

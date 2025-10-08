@@ -12,22 +12,35 @@ import useSWR from "swr";
 const LiveValueCell: React.FC<{ balance: number, account: Account }> = ({ balance, account }) => {
   const { data: trades } = useSWR<Trade[]>("/trade/", fetcher);
 
+  // Helper to get adjusted realized based on commission setting
+  const getAdjustedRealized = (trade: Trade) => {
+    const realized = Number(trade.realized);
+    const fees = Number(trade.fees) || 0;
+    return account.isCommissionsIncluded ? realized - fees : realized;
+  };
+
   const totalRealized =
     trades
       ?.filter(trade => trade.accountId === account.id)
-      .reduce((sum, trade) => sum + (Number(trade.realized) || 0), 0) || 0;
+      .reduce((sum, trade) => sum + getAdjustedRealized(trade), 0) || 0;
 
   const combined = balance + totalRealized;
 
   const formatted = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
+    signDisplay: "auto",
   }).format(combined);
 
   const isUp = combined > balance;
+  const isNegative = combined < 0;
 
   if (combined === balance) {
-    return <div className="font-medium">{formatted}</div>;
+    return (
+      <div className={`font-medium ${isNegative ? "text-red-600" : ""}`}>
+        {formatted}
+      </div>
+    );
   }
 
   return (

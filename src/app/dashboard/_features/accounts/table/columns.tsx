@@ -48,6 +48,18 @@ const ActionsCell: React.FC<{ row: Row<Account> }> = ({ row }) => {
     }
   };
 
+  const handleToggleCommission = async () => {
+    try {
+      await updateAccount(account.id || null, {
+        isCommissionsIncluded: !account.isCommissionsIncluded,
+      });
+      mutate("/account/");
+      toast.success(`Commission ${account.isCommissionsIncluded ? "excluded from" : "included in"} statistics.`);
+    } catch {
+      toast.error("Failed to update commission status.");
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -60,6 +72,9 @@ const ActionsCell: React.FC<{ row: Row<Account> }> = ({ row }) => {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem onClick={handleToggleAnalytics}>
           Toggle Analytics
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleToggleCommission}>
+          Toggle Commission
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleEdit}>Edit Account</DropdownMenuItem>
@@ -113,6 +128,21 @@ export const columns: ColumnDef<Account>[] = [
       return (
         <Badge
           variant={isIncluded ? "outline" : "destructive"}
+          className="text-xs mr-1"
+        >
+          {isIncluded ? "Included" : "Excluded"}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "isCommissionsIncluded",
+    header: "Commission",
+    cell: ({ row }) => {
+      const isIncluded = row.getValue("isCommissionsIncluded");
+      return (
+        <Badge
+          variant={isIncluded ? "outline" : "secondary"}
           className="text-xs mr-1"
         >
           {isIncluded ? "Included" : "Excluded"}

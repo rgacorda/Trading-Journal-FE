@@ -23,10 +23,13 @@ export const getAccounts = async () => {
 
 export type Account = {
   name?: string;
+  type?: string;
+  currency?: string;
   balance?: number;
   userId?: string;
   id?: string;
   isAnalyticsIncluded?: boolean;
+  isCommissionsIncluded?: boolean;
 };
 
 type createAccount = {

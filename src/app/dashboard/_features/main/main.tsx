@@ -14,6 +14,18 @@ export default function MainDashboard() {
   const { data: trades } = useSWR<Trade[]>("/trade/", fetcher);
   const { data: accounts } = useSWR<Account[]>("/account/", fetcher);
 
+  // Helper function to get adjusted realized value
+  const getAdjustedRealized = React.useCallback((trade: Trade) => {
+    if (!accounts) return Number(trade.realized);
+
+    const account = accounts.find(acc => acc.id === trade.accountId);
+    const isCommissionsIncluded = account?.isCommissionsIncluded || false;
+    const realized = Number(trade.realized);
+    const fees = Number(trade.fees) || 0;
+
+    return isCommissionsIncluded ? realized - fees : realized;
+  }, [accounts]);
+
   const now = new Date();
 
   // Last month (June)
@@ -31,7 +43,7 @@ export default function MainDashboard() {
         new Date(trade.date) >= firstDayOfCurrentMonth &&
         new Date(trade.date) <= lastDayOfCurrentMonth
     )
-    .reduce((acc, trade) => acc + Number(trade.realized), 0) ?? 0;
+    .reduce((acc, trade) => acc + getAdjustedRealized(trade), 0) ?? 0;
 
   // Revenue last month
   const totalRevenueLastMonth = trades
@@ -40,20 +52,20 @@ export default function MainDashboard() {
         new Date(trade.date) >= firstDayOfLastMonth &&
         new Date(trade.date) <= lastDayOfLastMonth
     )
-    .reduce((acc, trade) => acc + Number(trade.realized), 0) ?? 0;
+    .reduce((acc, trade) => acc + getAdjustedRealized(trade), 0) ?? 0;
 
   const totalTrades = trades?.length ?? 0;
-  const winningTrades = trades?.filter((t) => Number(t.realized) > 0) ?? [];
-  const losingTrades = trades?.filter((t) => Number(t.realized) < 0) ?? [];
+  const winningTrades = trades?.filter((t) => getAdjustedRealized(t) > 0) ?? [];
+  const losingTrades = trades?.filter((t) => getAdjustedRealized(t) < 0) ?? [];
 
   const totalWinners = winningTrades.length;
   const winRate = totalTrades > 0 ? totalWinners / totalTrades : 0;
 
   const averageWin =
-    winningTrades.reduce((acc, t) => acc + Number(t.realized), 0) /
+    winningTrades.reduce((acc, t) => acc + getAdjustedRealized(t), 0) /
     (winningTrades.length || 1);
   const averageLoss =
-    losingTrades.reduce((acc, t) => acc + Math.abs(Number(t.realized)), 0) /
+    losingTrades.reduce((acc, t) => acc + Math.abs(getAdjustedRealized(t)), 0) /
     (losingTrades.length || 1);
 
   // const expectancy =
@@ -67,7 +79,7 @@ export default function MainDashboard() {
       (t) =>
         new Date(t.date) >= firstDayOfCurrentMonth &&
         new Date(t.date) <= lastDayOfCurrentMonth &&
-        Number(t.realized) > 0
+        getAdjustedRealized(t) > 0
     ) ?? [];
 
   const losingTradesCurrentMonth =
@@ -75,7 +87,7 @@ export default function MainDashboard() {
       (t) =>
         new Date(t.date) >= firstDayOfCurrentMonth &&
         new Date(t.date) <= lastDayOfCurrentMonth &&
-        Number(t.realized) < 0
+        getAdjustedRealized(t) < 0
     ) ?? [];
 
   const totalTradesCurrentMonth =
@@ -86,11 +98,11 @@ export default function MainDashboard() {
       : 0;
 
   const avgWinCurrentMonth =
-    winningTradesCurrentMonth.reduce((acc, t) => acc + Number(t.realized), 0) /
+    winningTradesCurrentMonth.reduce((acc, t) => acc + getAdjustedRealized(t), 0) /
     (winningTradesCurrentMonth.length || 1);
   const avgLossCurrentMonth =
     losingTradesCurrentMonth.reduce(
-      (acc, t) => acc + Math.abs(Number(t.realized)),
+      (acc, t) => acc + Math.abs(getAdjustedRealized(t)),
       0
     ) / (losingTradesCurrentMonth.length || 1);
 
@@ -104,7 +116,7 @@ export default function MainDashboard() {
       (t) =>
         new Date(t.date) >= firstDayOfLastMonth &&
         new Date(t.date) <= lastDayOfLastMonth &&
-        Number(t.realized) > 0
+        getAdjustedRealized(t) > 0
     ) ?? [];
 
   const losingTradesLastMonth =
@@ -112,7 +124,7 @@ export default function MainDashboard() {
       (t) =>
         new Date(t.date) >= firstDayOfLastMonth &&
         new Date(t.date) <= lastDayOfLastMonth &&
-        Number(t.realized) < 0
+        getAdjustedRealized(t) < 0
     ) ?? [];
 
   const totalTradesLastMonth =
@@ -123,11 +135,11 @@ export default function MainDashboard() {
       : 0;
 
   const avgWinLastMonth =
-    winningTradesLastMonth.reduce((acc, t) => acc + Number(t.realized), 0) /
+    winningTradesLastMonth.reduce((acc, t) => acc + getAdjustedRealized(t), 0) /
     (winningTradesLastMonth.length || 1);
   const avgLossLastMonth =
     losingTradesLastMonth.reduce(
-      (acc, t) => acc + Math.abs(Number(t.realized)),
+      (acc, t) => acc + Math.abs(getAdjustedRealized(t)),
       0
     ) / (losingTradesLastMonth.length || 1);
 

@@ -10,16 +10,32 @@ type StatItem = {
   locked?: boolean;
 };
 
-function calculateStats(trades: Trade[] | undefined): {
+function calculateStats(
+  trades: Trade[] | undefined,
+  accounts: any[] | undefined
+): {
   left: StatItem[];
   right: StatItem[];
 } {
-  if (!trades || trades.length === 0) {
+  if (!trades || trades.length === 0 || !accounts) {
     return { left: [], right: [] };
   }
 
+  // Create a map of accountId -> isCommissionsIncluded
+  const accountCommissionMap = new Map(
+    accounts.map((acc: any) => [acc.id, acc.isCommissionsIncluded])
+  );
+
+  // Helper function to get adjusted realized value
+  const getAdjustedRealized = (trade: Trade) => {
+    const isCommissionsIncluded = accountCommissionMap.get(trade.accountId);
+    const realized = Number(trade.realized);
+    const fees = Number(trade.fees) || 0;
+    return isCommissionsIncluded ? realized - fees : realized;
+  };
+
   const realized = trades
-    .map((t) => Number(t.realized))
+    .map((t) => getAdjustedRealized(t))
     .filter((r) => !isNaN(r));
   const totalGainLoss = realized.reduce((a, b) => a + b, 0);
   const averageTrade = totalGainLoss / trades.length;
@@ -29,23 +45,23 @@ function calculateStats(trades: Trade[] | undefined): {
     realized.reduce((sum, r) => sum + Math.pow(r - averageTrade, 2), 0) /
       (trades.length - 1 || 1)
   );
-  // const scratchTrades = trades.filter((t) => t.realized === 0);
+  // const scratchTrades = trades.filter((t) => getAdjustedRealized(t) === 0);
   const largestGain = Math.max(...realized);
   const largestLoss = Math.min(...realized);
   const perShare = trades.map((t) =>
-    t.quantity ? Number(t.realized) / t.quantity : 0
+    t.quantity ? getAdjustedRealized(t) / t.quantity : 0
   );
   const perShareAvg = perShare.reduce((a, b) => a + b, 0) / trades.length;
 
-  const wins = trades.filter((t) => t.realized > 0);
-  const losses = trades.filter((t) => t.realized < 0);
+  const wins = trades.filter((t) => getAdjustedRealized(t) > 0);
+  const losses = trades.filter((t) => getAdjustedRealized(t) < 0);
   const winAvg =
     wins.length > 0
-      ? wins.reduce((sum, t) => sum + Number(t.realized), 0) / wins.length
+      ? wins.reduce((sum, t) => sum + getAdjustedRealized(t), 0) / wins.length
       : 0;
   const lossAvg =
     losses.length > 0
-      ? losses.reduce((sum, t) => sum + Number(t.realized), 0) / losses.length
+      ? losses.reduce((sum, t) => sum + getAdjustedRealized(t), 0) / losses.length
       : 0;
   const winRate = (wins.length / trades.length) * 100;
 
@@ -55,11 +71,12 @@ function calculateStats(trades: Trade[] | undefined): {
   let currentLossStreak = 0;
 
   for (const t of trades) {
-    if (t.realized > 0) {
+    const adjustedRealized = getAdjustedRealized(t);
+    if (adjustedRealized > 0) {
       currentWinStreak++;
       maxWinStreak = Math.max(maxWinStreak, currentWinStreak);
       currentLossStreak = 0;
-    } else if (t.realized < 0) {
+    } else if (adjustedRealized < 0) {
       currentLossStreak++;
       maxLossStreak = Math.max(maxLossStreak, currentLossStreak);
       currentWinStreak = 0;
@@ -69,8 +86,8 @@ function calculateStats(trades: Trade[] | undefined): {
     }
   }
 
-  const totalWin = wins.reduce((sum, t) => sum + Number(t.realized), 0);
-  const totalLoss = losses.reduce((sum, t) => sum + Number(t.realized), 0);
+  const totalWin = wins.reduce((sum, t) => sum + getAdjustedRealized(t), 0);
+  const totalLoss = losses.reduce((sum, t) => sum + getAdjustedRealized(t), 0);
 
   const profitFactor = totalLoss < 0 ? Math.abs(totalWin / totalLoss) : "N/A";
 
@@ -145,8 +162,12 @@ export default function StatTable() {
     // error,
     isLoading,
   } = useSWR<Trade[]>("/trade/", fetcher);
+  const { data: accounts } = useSWR("/account/", fetcher);
 
-  const { left, right } = useMemo(() => calculateStats(trades), [trades]);
+  const { left, right } = useMemo(
+    () => calculateStats(trades, accounts),
+    [trades, accounts]
+  );
 
   if (isLoading) {
     return (

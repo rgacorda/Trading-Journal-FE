@@ -12,6 +12,7 @@ import { useTradeUIStore } from "@/stores/trade-ui-store";
 
 export default function TradeDashboard() {
   const { data: trades, error } = useSWR<Trade[]>("/trade/", fetcher);
+  const { data: accounts } = useSWR("/account/", fetcher);
   const filter = useTradeUIStore((s) => s.filter);
   const setFilter = useTradeUIStore((s) => s.setFilter);
 
@@ -34,7 +35,7 @@ export default function TradeDashboard() {
 
   const stats = React.useMemo(() => {
     const all = filteredTrades;
-    if (!all || all.length === 0) {
+    if (!all || all.length === 0 || !accounts) {
       return {
         expectancy: 0,
         totalTrades: 0,
@@ -44,16 +45,31 @@ export default function TradeDashboard() {
       };
     }
 
+    // Create a map of accountId -> isCommissionsIncluded
+    const accountCommissionMap = new Map(
+      accounts.map((acc: any) => [acc.id, acc.isCommissionsIncluded])
+    );
+
+    // Helper function to get adjusted realized value
+    const getAdjustedRealized = (trade: Trade) => {
+      const isCommissionsIncluded = accountCommissionMap.get(trade.accountId);
+      const realized = Number(trade.realized);
+      const fees = Number(trade.fees) || 0;
+
+      // If isCommissionsIncluded is true, subtract fees from realized
+      return isCommissionsIncluded ? realized - fees : realized;
+    };
+
     const totalTrades = all.length;
-    const winners = all.filter((t) => Number(t.realized) > 0);
-    const losers = all.filter((t) => Number(t.realized) < 0);
+    const winners = all.filter((t) => getAdjustedRealized(t) > 0);
+    const losers = all.filter((t) => getAdjustedRealized(t) < 0);
     const winRate = totalTrades > 0 ? winners.length / totalTrades : 0;
 
     const avgWin =
-      winners.reduce((acc, t) => acc + Number(t.realized), 0) /
+      winners.reduce((acc, t) => acc + getAdjustedRealized(t), 0) /
       (winners.length || 1);
     const avgLoss =
-      losers.reduce((acc, t) => acc + Math.abs(Number(t.realized)), 0) /
+      losers.reduce((acc, t) => acc + Math.abs(getAdjustedRealized(t)), 0) /
       (losers.length || 1);
 
     const pnlratio = avgWin / (avgLoss || 1);
@@ -76,7 +92,7 @@ export default function TradeDashboard() {
       pnlratio,
       avgGrade,
     };
-  }, [filteredTrades]);
+  }, [filteredTrades, accounts]);
 
   return (
     <>

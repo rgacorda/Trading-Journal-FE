@@ -24,7 +24,7 @@ interface MainSectionCardsProps {
 export function SectionCards(data: MainSectionCardsProps) {
 
 const revenueIncrease = data.data.totalRevenueLastMonth
-  ? data.data.totalRevenue ?? 0 - data.data.totalRevenueLastMonth
+  ? (data.data.totalRevenue ?? 0) - data.data.totalRevenueLastMonth
   : 0;
 const revenueIncreasePercentage = revenueIncrease
   ? (revenueIncrease / (data.data.totalRevenueLastMonth ?? 1)) * 100
@@ -66,7 +66,15 @@ const revenueIncreaseOrDecrease = revenueIncrease >= 0 ? "increase" : "decrease"
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <IconTrendingUp className="size-4" />
+            {revenueIncreaseOrDecrease === "increase" ? (
+              <>
+                Trending up this month <IconTrendingUp className="size-4" />
+              </>
+            ) : (
+              <>
+                Trending down this month <IconTrendingDown className="size-4" />
+              </>
+            )}
           </div>
           <div className="text-muted-foreground">
             Total Profit and Loss
@@ -96,10 +104,10 @@ const revenueIncreaseOrDecrease = revenueIncrease >= 0 ? "increase" : "decrease"
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <IconTrendingDown className="size-4" />
+            Win Rate Performance
           </div>
           <div className="text-muted-foreground">
-            Acquisition needs attention
+            {data.data.totalWinRate >= 50 ? "Strong win rate" : "Win rate needs improvement"}
           </div>
         </CardFooter>
       </Card>
