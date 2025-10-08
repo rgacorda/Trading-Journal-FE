@@ -108,6 +108,9 @@ function calculateStats(
       ? 0
       : KwinRate - (1 - KwinRate) * (avgLoss / avgWin);
 
+  // Calculate expectancy: (Win Rate × Average Win) - (Loss Rate × Average Loss)
+  const expectancy = (KwinRate * avgWin) - ((1 - KwinRate) * avgLoss);
+
   return {
     left: [
       { label: "Total Gain/Loss", value: `$${totalGainLoss.toFixed(2)}` },
@@ -118,6 +121,10 @@ function calculateStats(
       {
         label: "Average Trade Gain/Loss",
         value: `$${averageTrade.toFixed(2)}`,
+      },
+      {
+        label: "Expectancy",
+        value: `$${expectancy.toFixed(2)}`,
       },
       { label: "Total Number of Trades", value: `${trades.length}` },
       { label: "Trade P&L Standard Deviation", value: `$${stdDev.toFixed(2)}` },
