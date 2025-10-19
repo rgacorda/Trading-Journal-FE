@@ -37,7 +37,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Input } from "@/components/ui/input";
 import {
   FormField,
   FormItem,
@@ -48,7 +47,12 @@ import {
 import { toast } from "sonner";
 import { mutate } from "swr";
 import { useTradeUIStore } from "@/stores/trade-ui-store";
-import { getTradebyId, updateTrade, getTrades } from "@/actions/trades/trades";
+import {
+  getTradebyId,
+  updateTrade,
+  getTrades,
+  Trade,
+} from "@/actions/trades/trades";
 import { Badge } from "@/components/ui/badge";
 import { AxiosError } from "axios";
 
@@ -137,7 +141,7 @@ function AccountForm({
         const trades = await getTrades();
         if (Array.isArray(trades)) {
           // Extract all unique mistakes from all trades
-          const allMistakes = trades.reduce((acc: string[], trade: any) => {
+          const allMistakes = trades.reduce((acc: string[], trade: Trade) => {
             if (Array.isArray(trade.mistakes)) {
               return [...acc, ...trade.mistakes];
             }
