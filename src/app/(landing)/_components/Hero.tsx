@@ -1,66 +1,78 @@
 import React from 'react';
-import { ArrowRight, BarChart3, TrendingUp } from 'lucide-react';
+import { ArrowRight, Sparkles, Check } from 'lucide-react';
+import Image from 'next/image';
 
 const Hero = () => {
   return (
-    <section className="bg-gradient-to-br from-gray-50 to-gray-100 py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="text-center lg:text-left">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-              Master Your Trading
-              <span className="block text-gray-700">Performance</span>
-            </h1>
-            <p className="text-xl text-gray-600 mt-6 leading-relaxed">
-              The most comprehensive trading journal and analytics platform. Track, analyze, and improve your trading performance with advanced statistics and insights.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center lg:justify-start">
-              <button disabled className="bg-gray-900 text-white px-8 py-4 rounded-lg hover:bg-gray-800 transition-all duration-200 flex items-center justify-center group">
-                14-Day Free Trial Coming Soon
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
-              </button>
-              <button disabled className="border border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                Demo Coming Soon
-              </button>
+    <section className="relative overflow-hidden bg-white pt-24 pb-32 lg:pt-32 lg:pb-40">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:48px_48px]"></div>
+
+      {/* Gradient orb */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-radial from-gray-100 to-transparent opacity-60 blur-3xl"></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-5xl mx-auto text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black text-white mb-8 shadow-lg shadow-black/10">
+            <Sparkles className="h-4 w-4" />
+            <span className="text-sm font-medium">Now in Beta Testing</span>
+          </div>
+
+          {/* Headline */}
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-black leading-[1.1] mb-8 tracking-tight">
+            Master Your Trading
+            <span className="block text-gray-500 mt-2">Performance</span>
+          </h1>
+
+          {/* Subheadline */}
+          <p className="text-xl md:text-2xl text-gray-600 mb-12 leading-relaxed max-w-3xl mx-auto font-light">
+            The most comprehensive trading journal and analytics platform. Track, analyze, and improve your trading performance with advanced statistics and insights.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <button disabled className="bg-black text-white px-10 py-5 rounded-xl hover:bg-gray-900 transition-all duration-300 flex items-center justify-center group font-semibold text-lg shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:scale-105">
+              Start Free Trial
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+            </button>
+            <button disabled className="border-2 border-gray-300 text-gray-700 px-10 py-5 rounded-xl hover:border-black hover:bg-gray-50 transition-all duration-300 font-semibold text-lg">
+              View Demo
+            </button>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="flex items-center justify-center gap-8 text-sm text-gray-500 mb-20">
+            <div className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-black" />
+              <span>No credit card required</span>
             </div>
-            <div className="flex items-center justify-center lg:justify-start mt-8 space-x-6 text-sm text-gray-500">
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-gray-600 rounded-full mr-2"></div>
-                No credit card required
-              </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-gray-600 rounded-full mr-2"></div>
-                Setup in 2 minutes
-              </div>
+            <div className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-black" />
+              <span>14-day free trial</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-black" />
+              <span>Cancel anytime</span>
             </div>
           </div>
 
-          <div className="relative">
-            <div className="bg-white rounded-xl shadow-2xl p-6 transform rotate-3 hover:rotate-0 transition-transform duration-300">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Trading Performance</h3>
-                <TrendingUp className="h-6 w-6 text-gray-700" />
-              </div>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Win Rate</span>
-                  <span className="text-2xl font-bold text-gray-900">73.5%</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Profit Factor</span>
-                  <span className="text-2xl font-bold text-gray-900">2.4</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total Return</span>
-                  <span className="text-2xl font-bold text-gray-900">+24.7%</span>
-                </div>
-                <div className="bg-gray-100 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <BarChart3 className="h-5 w-5 text-gray-600" />
-                    <span className="text-sm text-gray-600">Last 30 days</span>
-                  </div>
-                  <div className="h-20 bg-gradient-to-r from-gray-600 to-gray-800 rounded opacity-75"></div>
-                </div>
+          {/* Platform Screenshot */}
+          <div className="relative group">
+            {/* Glow effect */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-3xl blur-2xl opacity-50 group-hover:opacity-70 transition-opacity duration-500"></div>
+
+            {/* Screenshot container */}
+            <div className="relative bg-gradient-to-b from-gray-50 to-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden p-1 backdrop-blur-sm">
+              <div className="bg-gray-900 rounded-xl p-1">
+                <Image
+                  src="/images/landing/SS1.png"
+                  alt="Trade2Learn Dashboard"
+                  width={1200}
+                  height={700}
+                  className="rounded-lg w-full h-auto"
+                  priority
+                />
               </div>
             </div>
           </div>

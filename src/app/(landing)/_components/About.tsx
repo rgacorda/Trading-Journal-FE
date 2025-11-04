@@ -75,11 +75,14 @@ const About = () => {
   return (
     <section
       id="about"
-      className="container mx-auto flex flex-col items-center space-y-16 py-8 px-4 md:py-12 lg:py-24"
+      className="container mx-auto flex flex-col items-center space-y-16 py-8 px-4 md:py-12 lg:py-24 bg-gradient-to-b from-white to-slate-50"
     >
       {/* Hero Section */}
       <div className="mx-auto flex max-w-[980px] flex-col items-center gap-4 text-center">
-        <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-6xl lg:leading-[1.1]">
+        <div className="inline-block px-4 py-2 rounded-full bg-black/5 border border-black/10 mb-2">
+          <span className="text-sm font-semibold text-black">OUR STORY</span>
+        </div>
+        <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-6xl lg:leading-[1.1] text-black">
           About Trade2Learn
         </h1>
         <p className="max-w-[750px] text-lg text-muted-foreground sm:text-xl">

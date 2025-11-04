@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import { TrendingUp, Users, BarChart, DollarSign } from 'lucide-react';
 
@@ -30,13 +31,23 @@ const Statistics = () => {
   ];
 
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+    <section className="relative py-24 lg:py-32 bg-black text-white overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:48px_48px]"></div>
+
+      {/* Gradient orbs */}
+      <div className="absolute top-1/2 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-20">
+          <div className="inline-block px-4 py-2 rounded-full bg-white text-black mb-6 shadow-xl shadow-white/10">
+            <span className="text-sm font-medium">OUR IMPACT</span>
+          </div>
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
             Trusted by Traders Worldwide
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto font-light">
             Join thousands of traders who have improved their performance using Trade2Learn&apos;s advanced analytics and journaling tools.
           </p>
         </div>
@@ -45,19 +56,24 @@ const Statistics = () => {
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="text-center group"
+              className="relative group"
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 group-hover:bg-gray-200 transition-colors duration-300 mb-4">
-                <stat.icon className="h-8 w-8 text-gray-700 group-hover:scale-110 transition-transform duration-300" />
-              </div>
-              <div className="text-4xl font-bold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors duration-300">
-                {stat.value}
-              </div>
-              <div className="text-lg font-semibold text-gray-700 mb-2">
-                {stat.label}
-              </div>
-              <div className="text-gray-600 text-sm">
-                {stat.description}
+              {/* Card background */}
+              <div className="absolute inset-0 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/10 group-hover:border-white/30 group-hover:bg-white/10 transition-all duration-500"></div>
+
+              <div className="relative p-10 text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-xl shadow-white/20">
+                  <stat.icon className="h-8 w-8 text-black" />
+                </div>
+                <div className="text-5xl lg:text-6xl font-bold mb-4 text-white group-hover:scale-105 transition-transform duration-300">
+                  {stat.value}
+                </div>
+                <div className="text-xl font-bold text-white mb-3">
+                  {stat.label}
+                </div>
+                <div className="text-gray-400 text-sm leading-relaxed">
+                  {stat.description}
+                </div>
               </div>
             </div>
           ))}
